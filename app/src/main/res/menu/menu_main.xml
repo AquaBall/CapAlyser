@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.tye.capalyser.CapAlyserMain">
+    <item
+        android:id="@+id/men_auswahl"
+        android:orderInCategory="100"
+        android:title="@string/act_auswahl" />
+    <item
+        android:id="@+id/men_quint"
+        android:orderInCategory="101"
+        android:title="@string/act_stimm"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/men_setting"
+        android:orderInCategory="103"
+        android:title="@string/act_settings"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frag_play"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tye.capalyser.frPlay">
+
+    <TextView
+        android:id="@+id/tvDatei"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/txSelLied"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:id="@+id/tvAnfang"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="@string/spick"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/swTonart"
+        app:layout_constraintTop_toBottomOf="@+id/tvDatei"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btS1"
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="4dp"
+        android:text="@string/T1"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btS2"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="4dp"
+        android:text="@string/T2"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/btS1"
+        app:layout_constraintRight_toRightOf="@+id/btS1"
+        app:layout_constraintTop_toBottomOf="@+id/btS1" />
+
+    <Button
+        android:id="@+id/btS3"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="4dp"
+        android:text="@string/B1"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/btS2"
+        app:layout_constraintRight_toRightOf="@+id/btS2"
+        app:layout_constraintTop_toBottomOf="@+id/btS2" />
+
+    <Button
+        android:id="@+id/btS4"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="4dp"
+        android:text="@string/B2"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/btS3"
+        app:layout_constraintRight_toRightOf="@+id/btS3"
+        app:layout_constraintTop_toBottomOf="@+id/btS3" />
+
+    <TextView
+        android:id="@+id/tvAkkorde"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="32dp"
+        android:lineSpacingExtra="2sp"
+        android:text="@string/akkorde"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/sbDauer"
+        app:layout_constraintEnd_toEndOf="@+id/btS3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btS1"
+        app:layout_constraintStart_toStartOf="@+id/tvAnfang" />
+
+    <TextView
+        android:id="@+id/tvTonart"
+        android:layout_width="55dp"
+        android:layout_height="25dp"
+        android:layout_marginRight="55dp"
+        android:contentDescription="@string/dur"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivTonart"
+        app:layout_constraintEnd_toStartOf="@+id/ivTonart"
+        android:layout_marginEnd="0dp" />
+
+    <Switch
+        android:id="@+id/swTonart"
+        android:layout_width="83dp"
+        android:layout_height="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="start"
+        android:text="@string/tonart"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTonart"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivTonart" />
+
+    <Button
+        android:id="@+id/btAkkord"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/akkord"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/btS4"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btS4"
+        app:layout_constraintTop_toBottomOf="@+id/btS4" />
+
+    <SeekBar
+        android:id="@+id/sbAnzahl"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="6"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
+        android:progress="3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/tvAkkorde"
+        app:layout_constraintRight_toRightOf="@+id/tvAkkorde"
+        app:layout_constraintTop_toBottomOf="@+id/tvAkkorde"
+        app:layout_constraintEnd_toStartOf="@+id/btAkkord"
+        android:layout_marginEnd="8dp"
+        tools:ignore="RtlCompat" />
+
+    <ImageView
+        android:id="@+id/ivTonart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@mipmap/svm_logo"
+        android:contentDescription="@string/pictonart"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btS1"
+        android:layout_marginEnd="8dp" />
+
+    <SeekBar
+        android:id="@+id/sbDauer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:max="4"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
+        android:progress="3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/btAkkord"
+        app:layout_constraintRight_toRightOf="@+id/btAkkord"
+        app:layout_constraintTop_toBottomOf="@+id/btAkkord" />
+
+</android.support.constraint.ConstraintLayout>

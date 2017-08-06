@@ -1,0 +1,185 @@
+
+        <ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.constraint.ConstraintLayout
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            tools:context="com.tye.capalyser.frSetting">
+
+            <TextView
+                android:id="@+id/txSpacer"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="RtlCompat" />
+
+            <TextView style="@style/PreferenzHeader"
+                android:id="@+id/header" android:text="@string/header"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView style="@style/Preferenz"
+                android:id="@+id/txPrimaryTit" android:text="@string/txPrimaryTit"
+                app:layout_constraintStart_toStartOf="@+id/header"
+                android:layout_marginStart="120dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/header" />
+
+            <TextView style="@style/PreferenzStatus"
+                android:id="@+id/txPrimaryKom" android:text="@string/txPrimaryKomL"
+                app:layout_constraintEnd_toStartOf="@+id/txPrimaryP"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txPrimaryTit" />
+            <Spinner
+                android:id="@+id/txPrimaryP"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_marginEnd="0dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txPrimaryTit"
+                app:layout_constraintEnd_toEndOf="@+id/txSpacer"
+                android:gravity="end"
+                tools:ignore="RtlCompat"
+                tools:layout_editor_absoluteY="57dp" />
+
+            <TextView style="@style/Preferenz"
+                android:id="@+id/txModusTit" android:text="@string/txModusTit"
+                app:layout_constraintStart_toStartOf="@+id/txPrimaryTit"
+                app:layout_constraintTop_toBottomOf="@+id/txPrimaryTit"
+                android:layout_marginTop="8dp" />
+
+            <TextView style="@style/PreferenzStatus"
+                android:id="@+id/txModusKom" android:text="@string/txModusKom"
+                app:layout_constraintEnd_toStartOf="@+id/txModusS"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txModusTit" />
+            <Switch
+                android:id="@+id/txModusS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txModusTit"
+                app:layout_constraintEnd_toEndOf="@+id/txSpacer"
+                app:layout_constraintStart_toStartOf="@+id/txSpacer" />
+
+            <TextView style="@style/Preferenz"
+                android:id="@+id/txDiscTit" android:text="@string/txDiscTit"
+                app:layout_constraintStart_toStartOf="@+id/txPrimaryTit"
+                app:layout_constraintTop_toBottomOf="@+id/txModusTit"
+                android:layout_marginTop="8dp" />
+
+            <TextView style="@style/PreferenzStatus"
+                android:id="@+id/txDiscKom" android:text="@string/txDiscKom"
+                app:layout_constraintEnd_toStartOf="@+id/txDiscS"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txDiscTit" />
+            <Switch
+                android:id="@+id/txDiscS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txDiscTit"
+                app:layout_constraintEnd_toEndOf="@+id/txSpacer"
+                app:layout_constraintStart_toStartOf="@+id/txSpacer" />
+
+            <TextView style="@style/PreferenzHeader"
+                android:id="@+id/headLied" android:text="@string/headLied"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txDiscTit"
+                android:layout_marginTop="16dp" />
+
+            <TextView style="@style/Preferenz"
+                android:id="@+id/txLiedDauerTit" android:text="@string/txLiedDauerTit"
+                app:layout_constraintStart_toStartOf="@+id/txPrimaryTit"
+                app:layout_constraintBaseline_toBaselineOf="@+id/headLied" />
+
+            <TextView style="@style/PreferenzStatus"
+                android:id="@+id/txLiedDauerKom" android:text="@string/txDauerKomL"
+                app:layout_constraintEnd_toStartOf="@+id/txLiedDauerT"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txLiedDauerTit" />
+            <EditText  style="@style/PreferenzEditNumber"
+                android:id="@+id/txLiedDauerT" android:text="@string/txLiedDauerDef"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txLiedDauerTit"
+                app:layout_constraintEnd_toEndOf="@+id/txSpacer" app:layout_constraintStart_toStartOf="@+id/txSpacer" />
+
+            <TextView style="@style/Preferenz"
+                android:id="@+id/txLiedZahlTit" android:text="@string/txLiedZahlTit"
+                app:layout_constraintStart_toStartOf="@+id/txPrimaryTit"
+                app:layout_constraintTop_toBottomOf="@+id/txLiedDauerKom"  />
+
+            <TextView style="@style/PreferenzStatus"
+                android:id="@+id/txLiedZahlKom" android:text="@string/txLiedZahlKom"
+                app:layout_constraintEnd_toStartOf="@+id/txLiedZahlT"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txLiedZahlTit" />
+            <EditText  style="@style/PreferenzEditNumber"
+                android:id="@+id/txLiedZahlT" android:text="@string/txLiedZahlDef"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txLiedZahlTit"
+                app:layout_constraintEnd_toEndOf="@+id/txSpacer" app:layout_constraintStart_toStartOf="@+id/txSpacer" />
+
+            <TextView style="@style/PreferenzHeader"
+                android:id="@+id/headArt" android:text="@string/headArt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txLiedZahlTit"
+                android:layout_marginTop="16dp" />
+
+            <TextView style="@style/Preferenz"
+                android:id="@+id/txArtDauerTit" android:text="@string/txArtDauerTit"
+                app:layout_constraintStart_toStartOf="@+id/txPrimaryTit"
+                app:layout_constraintBaseline_toBaselineOf="@+id/headArt" />
+
+            <TextView style="@style/PreferenzStatus"
+                android:id="@+id/txArtDauerKom" android:text="@string/txDauerKomL"
+                app:layout_constraintEnd_toStartOf="@+id/txArtDauerT"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txArtDauerTit" />
+            <EditText  style="@style/PreferenzEditNumber"
+                android:id="@+id/txArtDauerT" android:text="@string/txArtDauerDef"
+                app:layout_constraintBaseline_toBaselineOf="@+id/txArtDauerTit"
+                app:layout_constraintEnd_toEndOf="@+id/txSpacer" app:layout_constraintStart_toStartOf="@+id/txSpacer" />
+
+            <Switch
+                android:id="@+id/swShowLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/show_log"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="8sp"
+                tools:ignore="SmallSp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/headArt"
+                app:layout_constraintStart_toStartOf="@+id/headArt"
+                android:layout_marginStart="8dp" />
+            <TextView
+                android:id="@+id/txLog"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/log"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="10sp"
+                android:visibility="gone"
+                tools:ignore="RtlCompat,SmallSp"
+                app:layout_constraintTop_toBottomOf="@+id/swShowLog"
+                app:layout_constraintStart_toStartOf="@+id/txArtDauerKom"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txArtDauerKom"
+                tools:layout_editor_absoluteX="233dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fbReload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_dialog_email"
+                tools:ignore="RtlCompat" />
+
+        </android.support.constraint.ConstraintLayout>
+        </ScrollView>

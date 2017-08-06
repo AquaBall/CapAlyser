@@ -1,0 +1,74 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">CapAlyser 1.0</string>
+    <string name="app_vers">V 1.01 bis</string>
+    <string name="valid_until" tools:ignore="TypographyDashes">2017-09-30</string>
+    <string name="betaAlt">Beta-version veraltet!</string>
+    <string name="app_copR">© TyE2017</string>
+
+    <string name="disclaim"><i>Das ist eine BetaVersion in TestPhase!</i></string>
+
+    <string name="txFeedback">Ich freu mich sehr über jede Rückmeldung.\nInsbesondere Fehlermeldungen, Verbesserungsvorschläge (und auch Lob).</string>
+
+    <string name="section_format">Dummy Fragment : %1$d</string>
+    <string name="txtQuint">QuintenZirkel</string>
+
+    <string name="txWisch">starten mit Wischen</string>
+    <string name="txLlinks">links</string>
+    <string name="txRechts">rechts</string>
+
+    <string name="act_auswahl">Liedauswahl</string>
+    <string name="act_stimm">Stimmpfeife</string>
+    <string name="act_settings">Einstellungen</string>
+    <string name="txLogo">Logo</string>
+    <string name="qt4Klang">4-Klang</string>
+    <string name="descQuint">Quintenzirkel</string>
+    <string name="txSelLied">(bitte Lied wählen)</string>
+
+    <!-- SettingsScreen:  -->
+    <string name="header">Einstellungen</string>
+    <string name="txLiedDauerDef">2</string>
+    <string name="txLiedZahlDef">6</string>
+    <string name="txArtDauerDef">2</string>
+    <string name="txPrimaryTit">Startseite:</string>
+        <string name="txPrimaryKom">Das Programm wird mit dieser Seite eröffnet.</string>
+        <string name="txPrimaryKomL">Eröffnet wird mit:</string>
+        <string name="txModusTit">Anstimmen:</string>
+            <string name="txModusKom">Angestimmt wird %s.</string>
+                <string name="txMelodie">die Liedmelodie</string>
+                <string name="txTonart">die Tonart</string>
+    <string name="txDiscTit">Begrüßung:</string>
+            <string name="txDiscKom">Begrüßungsbildschirm wird%s angezeigt.</string>
+                <string name="txNicht"> nicht</string>
+    <string name="headLied">Liedmodus</string>
+        <string name="txLiedDauerTit">Tonlänge im Liedmodus:</string>
+            <string name="txLiedDauerKom">Liedtöne werden %s gespielt.</string>
+            <string name="txDauerKomL">werden %s gespielt.</string>
+        <string name="txLiedZahlTit">Tonanzahl:</string>
+            <string name="txLiedZahlKom">Es werden %d Liedtöne gespielt.</string>
+        <string name="headArt">Tonartmodus</string>
+        <string name="txArtDauerTit">Tonlänge im Tonartmodus:</string>
+            <string name="txArtDauerKom">Tonartöne werden %s gespielt.</string>
+    <string name="txReload">Nachladen von Liedpaketen erfolgt (zZt. noch) über App-Update.</string>
+    <string name="log">Log:</string>
+    <string name="show_log">show Log</string>
+
+    <!-- Tonarten:  -->
+    <string name="taDes">Des</string>   <string name="taAs">As</string> <string name="taEs">Es</string>
+    <string name="taB">B</string>       <string name="taF">F</string>   <string name="taC">C</string>
+    <string name="taG">G</string>       <string name="taD">D</string>   <string name="taA">A</string>
+    <string name="taE">E</string>       <string name="taH">H</string>   <string name="taFis">Fis</string>
+    <string name="taGes">Ges</string>
+    <string name="dur">%s-dur</string>
+    <string name="oktave">mit Oktave</string>
+    <string name="beta">Beta: fehlt noch</string>
+    <string name="T1">T1</string>
+    <string name="T2">T2</string>
+    <string name="B1">B1</string>
+    <string name="B2">B2</string>
+    <string name="spick">Spickzettel</string>
+    <string name="akkorde">Akkorde</string>
+    <string name="tonart">Tonart</string>
+    <string name="akkord">Akkord</string>
+    <string name="pictonart">Tonart</string>
+
+</resources>

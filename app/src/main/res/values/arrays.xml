@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="akkord">
+        <item>"Grundstellung"</item>
+        <item>"1. Umkehrung"</item>
+        <item>"2. Umkehrung"</item>
+        <item>"3. Umkehrung"</item>
+    </string-array>
+    <string-array name="leiter">
+        <item>"Dur"</item>
+        <item>"Moll"</item>
+    </string-array>
+</resources>

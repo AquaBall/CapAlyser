@@ -1,0 +1,181 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screenQuint"
+    xmlns:documentation="QuintenZirkel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tye.capalyser.frQuint">
+
+    <ImageView
+        android:id="@+id/imQuint"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="160dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:alpha="0.2"
+        android:contentDescription="@string/descQuint"
+        android:scaleType="fitXY"
+        android:src="@drawable/quintenzirkel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.312"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/txQuint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/txtQuint"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/imQuint"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/imQuint"
+        app:layout_constraintStart_toStartOf="@+id/imQuint"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="0dp" />
+
+    <Spinner
+        android:id="@+id/spLeiter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:entries="@array/leiter"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/spAkkord"
+        app:layout_constraintStart_toStartOf="@+id/spAkkord"
+        android:layout_marginStart="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/spAkkord" />
+
+    <Spinner
+        android:id="@+id/spAkkord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:entries="@array/akkord"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/btEs"
+        app:layout_constraintStart_toStartOf="@+id/btA"
+        app:layout_constraintTop_toTopOf="@+id/btC"
+        app:layout_constraintBottom_toBottomOf="@+id/imQuint"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <Switch
+        android:id="@+id/swOktave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/oktave"
+        app:layout_constraintEnd_toEndOf="@+id/spAkkord"
+        app:layout_constraintStart_toStartOf="@+id/spAkkord"
+        app:layout_constraintTop_toBottomOf="@+id/spAkkord" />
+
+
+    <!--   Eigentlich ToDo sollte sich das doch vereinheitlichen lassen ?!?!
+    <include layout="@layout/merge_tonart"
+        android:id="@+id/btDes" android:tag="@string/taDes" android:text="@string/taDes" android:background="@drawable/tonart_03_des_dur_b_moll"
+        app:layout_constraintHorizontal_bias="0.25" app:layout_constraintVertical_bias=  "0.93"     documentation:purpose="Pos07"
+        tools:ignore="MissingPrefix"
+        />-->
+
+    <!--documentation:purpose :    Horizontal =(1+sin( Pos ))/2      Vertikal =(1-cos( Pos ))/2         -->
+    <Button
+        android:id="@+id/btGes" android:tag="@string/taGes" android:text="@string/taGes" android:background="@drawable/tonart_02_ges_dur_es_moll"
+        app:layout_constraintHorizontal_bias="0.4" app:layout_constraintVertical_bias=  "1.0"       documentation:purpose="Pos06L"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btDes" android:tag="@string/taDes" android:text="@string/taDes" android:background="@drawable/tonart_03_des_dur_b_moll"
+        app:layout_constraintHorizontal_bias="0.25" app:layout_constraintVertical_bias=  "0.93"     documentation:purpose="Pos07"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btAs" android:tag="@string/taAs" android:text="@string/taAs" android:background="@drawable/tonart_04_as_dur_f_moll"
+        app:layout_constraintHorizontal_bias="0.07" app:layout_constraintVertical_bias=  "0.75"     documentation:purpose="Pos08"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btEs" android:tag="@string/taEs" android:text="@string/taEs" android:background="@drawable/tonart_05_es_dur_c_moll"
+        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias=  "0.5"       documentation:purpose="Pos09"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btB" android:tag="@string/taB" android:text="@string/taB" android:background="@drawable/tonart_06_b_dur_g_moll"
+        app:layout_constraintHorizontal_bias="0.07" app:layout_constraintVertical_bias=  "0.25"     documentation:purpose="Pos10"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btF" android:tag="@string/taF" android:text="@string/taF" android:background="@drawable/tonart_07_f_dur_d_moll"
+        app:layout_constraintHorizontal_bias="0.25" app:layout_constraintVertical_bias=  "0.07"     documentation:purpose="Pos11"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btC" android:tag="@string/taC" android:text="@string/taC" android:background="@drawable/tonart_08_c_dur_a_moll"
+        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintVertical_bias=  "0.0"       documentation:purpose="Pos12"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btG" android:tag="@string/taG" android:text="@string/taG" android:background="@drawable/tonart_09_g_dur_e_moll"
+        app:layout_constraintHorizontal_bias="0.75" app:layout_constraintVertical_bias=  "0.07"     documentation:purpose="Pos01"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btD" android:tag="@string/taD" android:text="@string/taD" android:background="@drawable/tonart_10_d_dur_h_moll"
+        app:layout_constraintHorizontal_bias="0.93" app:layout_constraintVertical_bias=  "0.25"     documentation:purpose="Pos02"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btA" android:tag="@string/taA" android:text="@string/taA" android:background="@drawable/tonart_11_a_dur_fis_moll"
+        app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias=  "0.50"      documentation:purpose="Pos03"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btE" android:tag="@string/taE" android:text="@string/taE" android:background="@drawable/tonart_12_e_dur_cis_moll"
+        app:layout_constraintHorizontal_bias="0.93" app:layout_constraintVertical_bias=  "0.74"     documentation:purpose="Pos04"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btH" android:tag="@string/taH" android:text="@string/taH" android:background="@drawable/tonart_13_h_dur_gis_moll"
+        app:layout_constraintHorizontal_bias="0.75" app:layout_constraintVertical_bias=  "0.93"     documentation:purpose="Pos05"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+    <Button
+        android:id="@+id/btFis" android:tag="@string/taFis" android:text="@string/taFis" android:background="@drawable/tonart_14_fis_dur_dis_moll"
+        app:layout_constraintHorizontal_bias="0.6" app:layout_constraintVertical_bias=  "1.0"       documentation:purpose="Pos06R"
+        app:layout_constraintTop_toTopOf=       "@+id/imQuint" app:layout_constraintStart_toStartOf=   "@+id/imQuint"
+        app:layout_constraintBottom_toBottomOf= "@+id/imQuint" app:layout_constraintEnd_toEndOf=       "@+id/imQuint"
+        style="@style/TonartSymbol" tools:ignore="MissingPrefix" />
+
+</android.support.constraint.ConstraintLayout>

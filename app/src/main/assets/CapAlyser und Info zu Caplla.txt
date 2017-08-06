@@ -1,0 +1,371 @@
+﻿==================
+Capella Utils 2017
+==================
+
+Aktuelle 22s auf Android: 2017-08-05
+	Vorspiel:
+		Tonlängen besser darstellen
+            TonLücke (unterschiedlicher Beginn der Stimmen) erkennen
+            Tonfolge beliebig lang? (bishin zum echten Vorspiel: Pausen/Tonlängen)
+    DataScreens:
+        TextLücken mit  ... markieren (Siehe "So a 3 an der Zahl")
+        Bei Texten die Stimmsprünge/ZeilenEnde (optional) markieren
+    Bugs:
+        Unterer Streifen wird an jedem Bildschirm abgeschnitten
+        Tablet in Querformat = 2 x hoch
+        auf Kopfgedreht?!?
+        Drehung des Bildschirmes buggt: Textview in 'Data' zu langsam?
+            http://code.hootsuite.com/orientation-changes-on-android/
+            Nach Drehen der Fenster kann kein Text-Feld mehr angesprochen werden?!?!
+            Scheint (auch?) an Context(, ...?) zu liegen
+        Reset
+            reset Button?
+            https://developer.android.com/guide/components/activities/activity-lifecycle.html
+            Welche (leider[??] nicht alle) Daten merkt sich das Programm auch nach Beendigung?
+                Offensichtlich ist ein Unterschied zw. 'TextViev' und 'EditText'
+            Wie kann ich korrekte Beendiung erreichen/ erzwingen (wie reset)
+            Benennung Variable/Feld/ID/...: Was ist "Lied", was "Titel", was "Datei"
+        Bei Neuversion:
+            Altbestand löschen
+            Synchronität prüfen
+        Warum geht beim drehen manchmal die Tastatur auf?
+
+FunktionsOptimierung / Ideen:
+    Prefs, Settings
+        Stimmpfeife <-> Quint auswählen?
+        "Wohin Nach Liedwahl springen"?
+        SprungMenü verallgemeinern
+        Settings "ohneBegrüßung" könnte Begrüßung wegscahlten SprungMenü auf Begrüßung stellt ihn iweder her
+        Soll Begrüßung im Beta immer fix bleiben?
+        Soll Neustart Prefs anwenden? (optional)
+        soll / kann ein Neuinstall alte Daten und Preferences resetten ?
+	DateiLoading:
+		Suchfunktion
+		Datenbank aus Zip aufbauen für Schnellinfo im Listview (Tonart, Autor, ...)
+		Suchfeld evtl über Zips hinweg
+		Noten-Pakete nachladen? aus DropBoxVerbindung (Link = pref)
+    DataScreens:
+        InfoFeld: RTF oder css (Parameter)
+        	Titel an Potition erkennen?
+        	Autor	an Mehrzeilig und ":" erkennen?
+	Optik:
+	    Tablet mit waagrecht=3 Portrait=4  Fragmenten gleichzeitig
+    Stimpfeife
+        ProfiModus
+        Steigend/fallend
+        (Tonleitern haben nicht ganz mit Akkord zu tun)
+	Vorspiel:
+        oktavieren nach unten (/oben)
+		transponieren anbieten?
+	    Cool wäre, wenn der LängenSlider sich im Listview spiegeln würde
+        Die Stimmen zählung ist manchmal falsch, (Wo denn? ... wegen 1. Zeile zusätzlich?)
+		Anzahl der Stimmen soll Buttons erstellen/deaktivieren (Sollte auch bei TextErkennung Helfen)
+        Ich könnte evtl sogar VorspielAnzahl + Länge aus OriginalTakt erkennen? 4/4 =>4  3/4=>6?
+	    Akkord: erste Takt graphisch darstellen?
+	    Töne beim Vorpiel animieren?
+	Vorspiel:
+		Die 6. Oktav wird benötigt, hat aber keine Ton-Datei,
+		    oder soll ich dann 1 Oktav tiefer gehen?
+		    Sind da Noten falsch geschrieben (von Siggi ohne 8th?)?
+		    Josef meint, dass manchmal Sopran zu hören ist.
+	ProgrammCode verbessern:
+		Statt Println Log + tag verwenden + ausmisten (Debug level)
+		Toast konfigurierbar abschalten
+	Notenbestand:
+		Synchronisieren und Abstimmen der Versionen, in Datenbank erfassen
+		Standardprogamm vervollständigen
+		'aktuelle' Neuerwerbungen einbauen, vergleichen mit letzten Konzerten
+	Urspürngliches  Ziel:
+        Ziel: Der Versuch, Capella zu erweitern, oder besser zu nutzen.
+        Mittel: PythonScript, oder Zusatzprogramme, oder Java, oder Notepad?
+    Weiterlernen:
+        Test-App?
+        Versionierung?
+        GitHub-Konto?
+         Allgemein ungelöste NervenZieher:
+            LiedDaten im DatenBlatt     // Porblem war: ursprünglich reichte Variable (Obserable?) muste auf Funktion umgebaut werden.
+            Wann brauch ich diees "Context" und wie bekomm ich das z.B. für Toast... in DatenClassen?
+            Wann sind denn Felder bereit zum anzeigen? Muss ich bei Fragment, oder bei PageAdapter oder bei Swipe-Activity nachschauen?
+         Kotlin optimierungen:
+            // Das wird automatisch erkannt?!?! :
+            //                  var zuvielVorhanden = false
+            //                  for (filename in oldFiles) if (!File(assets.toString(), filename).exists()) zuvielVorhanden= true
+            // und erstellt:    val zuvielVorhanden = oldFiles.none { File(assets.toString(), it).exists() }
+        in XML Quint ungelöst:
+            Wie könnte ich Textzeilen mehrfachverwenden, oder Standardeinstellungen definieren? (Styles mit <app:...> Einträgen?)
+        In frQuint .... onViewCreated()
+                // Ungelöst:
+                //      1) buttons selbst aus dem View herausfinden (ohne ArrayList)
+                //      2) ConstraintBias setzen, (um Verschieben berechnen zu können)
+            //        val set = ConstraintSet()
+            //        var pos=0
+            //        keys.forEach {
+            //            pos++
+            //            val bt = this.view?.findViewById<View>(it) as Button
+            //            bt.setOnClickListener { play(it)} // Tricky: 2 unterschiedliche 'it'
+            //            //  Positionierung am Kreis:  Horizontal =(1+sin( Pos ))/2      Vertikal =(1-cos( Pos ))/2
+            //            set.setHorizontalBias(bt.getId(), pos/.12f);
+            //            set.setVerticalBias(bt.getId(), pos/.12f);
+            //        }
+            //        set.applyTo(v as ConstraintLayout)   // Problem: Buttons verschwinden! Falscher parent?
+            //        Log.d("TyE Quint","  v    ${v}") //  app:id/screenQuint  ConstraintLayout{4b3edf2 V.E...... ......I. 0,0-0,0 #7f090098 }
+            //        Log.d("TyE Quint","  vg   ${vg}")//  app:id/container    ViewPager{adf250c VFED..... ......I. 0,0-0,0 #7f090043 }
+            //
+            //        // Warum geht nicht ein anonymes loopen?:
+            //        val layout = vg //v.findViewById<View>(R.id.screenQuint) as ViewGroup?
+            ////        Log.d("TyE Quint","${vg.childCount} vg-items ")
+            //        for (i in 0..layout.childCount - 1) {
+            ////
+            //                val child = layout.getChildAt(i)
+            //                Log.d("TyE Quint","    $i= $child  ${getResources().getResourceName(vg.id)}")//{getResources().getResourceName(child.id)} ")
+            ////
+            ////                (child as? Button)?.setOnClickListener { play(it)}
+            //            }
+    Info:
+        Umlaute im Zip: Gelöste "ABER":  Was macht dieses TargetApi  ?? Klemmt das irgendwo?
+            @TargetApi(Build.VERSION_CODES.N)
+            ZipFile(this, Charset.forName("CP437"))
+                    // http://www.theasciicode.com.ar/extended-ascii-code/letter-a-umlaut-diaeresis-a-umlaut-lowercase-ascii-code-132.html
+                //        val entries = ZipFile(this, Charset.forName("ISO_8859_1")).entries()  // ä=132  ö=148 ü=129    Ä=142  Ö=  Ü=  ß=225
+                //        val entries = ZipFile(this, Charsets.US_ASCII).entries()  // nicht lesbar
+                //        val entries = ZipFile(this, Charsets.UTF_8).entries()  // nicht lesbar
+                //        val entries = ZipFile(this, Charsets.UTF_16).entries()  // alles chinesisch
+                //        val entries = ZipFile(this).entries()
+                //        .replace(132.toChar(), 'ä')
+                //        .replace(148.toChar(), 'ö')
+                //        .replace(129.toChar(), 'ü')
+                //        .replace(142.toChar(), 'Ä')
+                //        .replace(153.toChar(), 'Ö')
+                //        .replace(154.toChar(), 'Ü')
+                //        .replace(225.toChar(), 'ß')
+                //n.forEach { if ( !(it in ('A'..'Z') || it in ('a'..'z') || it in ('0'..'9') || it == ' ' || it == '(' || it == ')' || it == '\'' || it == '.' || it == '-' || it == ',')) print(" TyE: "+it.toInt()+" ") } ; println(ze.name)
+
+
+
+=============================
+Ungeklärte Jave/Kotlin/Andorid-Uunsicherheiten:
+    Besonders erbärmlich:
+        Umlaute in Zip Stürzen ab!!
+            Bisher getestet: Charset, ...
+    in Setting:
+        PreferenceFragment Geht nicht mit FragmentPagerAdapter
+                fragmentManager.beginTransaction().add(android.R.id.content, MyPreferenceFragment()).commit();       // Funktioniert FAST! Aber überschreibt die Seite. Unbrauchbar!
+                seitenManager.addPref( MyPreferenceFragment())  // Cast geht nicht
+                supportFragmentManager.beginTransaction().add(android.R.id.content, MyPreferenceFragment() as Fragment).commit();       // Cast geht nicht
+            https://stackoverflow.com/questions/35142878/preferencefragment-with-appcompatactivity-android
+                class MyPreferenceFragment : PreferenceFragment() {     // extends PreferenceFragmentCompat sollte die Lösung bringen geht aber nicht
+                    override fun onCreate(savedInstanceState: Bundle?) {
+                        super.onCreate(savedInstanceState)
+                        addPreferencesFromResource(R.xml.pref_notification)
+                    }
+                }
+
+    im App.kt
+        SharedPref sollte als APP-Variable mit lazy funktionieren
+        sollte dann unnötig sein        val prefs = clPrefs(this)  (für Main/Settin/Play...)
+    in Main:
+        private fun copyAssets() {      kann assets als Folder angesprochen werden?
+
+================================
+
+Inhaltliche Kritik:
+	Die ganzen Daten sind sehr wackelig, und auf SVM-Normen angewiesen.
+	Tonart:
+		wird grundsätzlich nur in Dur angegeben (kein paralleles Moll).
+		Es wird nur die erste Tonart angegeben
+		Tonart-Wechsel werden nicht berücksichtigt.
+	Texte:
+		Ich kann Autor/Titel eigentlich nicht verbindlich erkennen.
+		Alle Anweisungen ("majestätisch", ...) werden von Capella wie jeder Text behandelt.
+		Formatierte Texte (RTF) werden überhaupt nicht eingelesen.
+	Liedtext:
+		Die Silben für Liedtext sind oft in unterschiedlichen Stimmen, was den Text-Fluss "zerklopft".
+		Versetzte Texte sind an sich kein Problem bei sauberer Schreibweise. Komplikationen gibt's dann aber bei gemeinsamen Textpassagen.
+		Eigentlich passiert Liedanfang das selbe, wie in LiedText, aber nur für das erste System, (falls nicht leer?). Stimme unsicher!
+		Was ist, wenn der Text erst im 2. System beginnt?
+		Bei Zeilen mit Wiederholung kann nicht erkannt werden, dass 2.Zeile keine eigene Strophe ist.
+	Systemwechsel:
+		Häufig: Jodler in einzelnem (letzten) System. Zerklopft die Stimmenzählung.
+		Könnte ich an der Partitur erkenne, welche Systeme ausgeblendet sind?
+	Einzelne Dateien haben ungültige Zeichen, die ein XML-Lesen verhindern. (z.B. bei SwingLow.capx)
+
+Welche Spanne brauch ich (für uns Keine Frauen/Kinder/Instrumente)
+	Tenor singt oktaviert.
+	für die Praxis brauch ich:
+			Bässe von C2 (2 Hilfslinien drunter)
+			über C3 im Bass-System
+			und C4 zwischen Systemen = Tenor oktaviert
+			bis C5 über System (für Jodler)
+		=> C2-C5 = 3 x 12 Halbtöne
+	TonDateien wurden erzeugt mit Wolfram:
+		Do[Export[ StringJoin["d:\\TyE\\SW\\Java\\Töne\\Ton", ToString[60 + i], ".mp3"], Sound[SoundNote[i, .75, "BrightPiano"]]], {i, -12*2, 12*2}]
+		Anhören geht mit:	Do[EmitSound[Sound[SoundNote[i, .75, "BrightPiano"]]], {i, -12*2, 12*2}]
+					oder:	c := -12; EmitSound[Sound[SoundNote[{c + 0, c + 4, c + 7, c + 12}, 1]]]
+
+Fehler (aus jar-Version:
+	in Jar: INFO: css not loaded!
+	in Eclipse: java.util.myPrefs.WindowsPreferences <init>
+			WARNING: Could not open/create myPrefs root node Software\JavaSoft\Prefs at root 0x80000002. Windows RegCreateKeyEx(...) returned error code 5.
+	Bei Josef bleibt Runtime im Hintergrund hängen => jar gesperrt! (wegen Fehler?) InstallScript mit "Kill JRE"
+	Alternative Startdirs ermöglichen (dir-History?)
+
+Karteiblatt:
+	Textsammlung der (restlichen) Texte (ohne Artikulationen) anzeigen
+		Evtl Zuordnungen ermöglichen?
+			Geht dann für Druck/Export
+			Aber wie kann das permanent gemacht werden?
+			Kommentar in Capella dafür nutzen?
+
+	Silben mit Zahlen = Stimm-nummer -> entfernen, oder nutzen
+	Taktangabe
+		Liedstiel aus Taktwechseln und Tempo-angaben?
+	StandardText erkennen und als Titel ausschließen
+
+Strukturfragen:	(ALs XML-Viewer allgemein interessant!!)
+	Testen, ob ALLE Verse in der identischen Struktur liegen.?
+	Was soll bei Scan eigentlich passieren? Die Daten seh ich ja schon!
+	Ich könnte:
+		im Baum filtern
+	    	Nur die betreffenden Zeile, auch mehrfach-Auswahl 
+	    	Bei EinfachAuswahl (oder allgOption) in Volltext, mit verkürzten Stufen (3-4 Zeichen)
+	    Optische (Platz)-Optimierungen:
+	    	Elemente mit nur 1 Child einzelig anzeigen
+	    	TextContent als Property anzeigen
+	Speicher für Baumdaten wieder freigeben?
+	
+Was will ich tun: Capella-Datei ändern?  Thema für Python in Capella!
+	Was will ich können?
+		Stapelarbeit für alle Dateien
+		RTF-Dateien erkennen (um auf einfach-Text umzubauen)
+		aus Texten Komponist + Texter erfassen (für Access)
+		Versionierung nachträglich korrigieren
+	Liedtext editieren
+		VollText Editor:
+			Alle Text-Zeilen auf einer Blatt
+			Alle Strophen getrennt
+			Bindestriche, VerbindungsLinien
+			Versteckte Zeichen als Copyright?
+	AutoRegister
+		Version 
+		letzte Änderung
+		DruckDatum
+		Editor
+	AutoFormat:
+		Formatierungen vereinheitlichen
+		Block "Melodie/Text/Satz" ausrichten/formatieren
+		Entfernung der Texte zur Note prüfen
+			Hoher Abstand, heißt freier Text, der gehört aber an erste oder letzte Note gebunden
+		Alle Schriften vereinheitlichen
+		Noten und Zeilenabstände (oben/unten symmetrisch, Vorher<->nachher symmetrisch)
+		Textabstand
+		Positionierung von Artikulationszeichen
+
+	
+	
+----------------------------------------------------------------------------------------------------
+2017-05-20 12:01 TyE Erste Versuche:
+	CAPX-Datei ist nur umbenanntes ZIP
+		Inhalt: score.xml mit allen Beschreibungen
+			(+ evtl obj___XX.rtf für Formatoerte Texte, die aber eh unerwünscht sind!)
+
+----------------------------------------------------------------------------------------------------
+2017-05-23 22:17 TyE:  
+ 	KnowHow Sammlung:
+ 		Die Baumstruktur unterstützt die Sequentielle Bedeutung der Datei eigentlich nicht!
+ 		Liedtexte stehen (immer?) im Zweig 
+ 			\#document\score\systems\system\staves\staff\voices\voice\noteObjects\chord\lyric\verse\#text
+ 		Dabei bedeuten:	
+ 			"Systems" 	(1x = Container)
+ 				"System"	Notensysteme
+ 			"Staves"	Zeile des Systems	(Im Normalfall genau: System x 2)	
+ 			"Voices"	(1x = Container)
+ 				"Voice"		Stimmen im System
+ 			"noteObjects"	(1x = Container)
+ 				"chord"		Container pro Note (mit Kopf+Hals+Artikulation PLUS Silbe!
+ 					"verse"	= Silbe	(Attribut 'i' gibt die Textzeile an!
+ 					
+ 		Ich brauch SteuerStruktur, die 
+ 			den Baum durchsteigt,
+ 			 			\#document\score\systems\system\staves\staff\voices\voice\noteObjects\chord\lyric\verse\#text
+ 			 	unwichtige Zweige überspringt
+ 			 	in relevante Zweige einsteigt (auch mit viele überflüssigen ZwischenStops)
+ 			 	Geht da Backtracking automatisch durch Rekursion?
+ 			\#document		-	-	-	-	-	-	-	-		
+ 			\score			-	-	-	-	-	-	-	-		
+ 			\systems		-	-	-	-	-	-	-	-		
+ 				\system		1	1	1	1	1	1	2	2		
+ 			\staves			-	-	-	-	-	-	-	-		
+ 			\staff			-	-	-	-	-	-	-	-		
+ 			\voices			-	-	-	-	-	-	-	-		
+ 				\voice		1	1	1	2	2	2	1	1		
+ 			\noteObjects	-	-	-	-	-	-	-	-		
+ 				\chord		1	2	3	1	2	3	1	2		
+ 			\lyric			-	-	-	-	-	-	-	-		
+ 			\verse			!	!	!	!	!	!	!	!		
+ 			\#text
+ 							Jeder Wechsel aus "System" setz die StimmZählung wieder zurück.
+ 							Kann ich Partiturwechsel verwalten?  Jodlerstimme als zusätzliches System zerklopft Stimmm-Zählung?
+
+Muster:
+<score xmlns="http://www.capella.de/CapXML/2.0">
+	...
+	<systems>	CONTAINER
+		<system tempo...>	X-mal ZÄHLEN
+			<staves>
+				<staff layout="Tenöre" defaultTime="4/4">
+					...
+					<voices>	CONTAINER
+						<voice stemDir="up">	X-mal ZÄHLEN innerhalb jedes System
+							...
+							<noteObjects>	CONTAINER
+								<clefSign clef="G2-"/>
+								<keySign fifth="2"/>
+								<timeSign time="2/4"/>
+								...
+								<chord>
+									...
+									<lyric>
+										<verse i="0" verseNumber="1.">Bei</verse>
+										<verse i="1">Ja,</verse>
+										<verse i="3" verseNumber="2.">Da</verse>
+ 									<duration base="1/8"/>
+									<heads>
+										<head pitch="C5"/>
+ 
+
+2017-05-24 10:09 TyE:  Ausgabe  gelesen wurde: Dahoam (Maierhofer) V1.2.capx
+	Stimme 1:
+	1) 1. Dahoam isch, wo dei' Weg und mei' Weg si' kreuz'n, dahoam, da find'n sich gar freundlich vertraut ins're Aug'n, dahoam.  <Lücke: Wo> Erd' und Himm'l isch <Lücke: Stimmfehler>
+		3. Dahoam isch a Stern voller Hoffnung am Himm'l,  <Lücke: wg Solo> 
+		Fern', hinter Berg und Tal, dahoam.   <Lücke: Wo>  Erd' und Himm'l isch wetterfest, hat 
+	
+	2) 2. Dahoam isch des Feucht' tiaf in fruchtbarer Erd'n, dahoam, da wachst und blüaht die Welt in farbiger Pracht, dahoam. 
+	
+	Stimme 2:
+	1) wetterfest, werd inser Glück auf Zeit guat vergeb'n. 
+		Wurz'ln mei' Leb'nsba'm, da bin i dahoam, dahoam. 
+	
+	Stimme 3:
+	1) 3.  Hm, dahoam, das Sehnen in der 
+	
+	Stimme 4:
+	1) Wo 
+		Wo 
+		Leb'nsba'm. 
+	2) Wo 
+
+2017-07-16
+    AndroidVersion erstellt mit AndroidStudio und Kotlin
+    Am virtuellen Device müssen Daten vorhanden sein.
+        Übertragen aus d:\TyE\Clouds\Dropbox\SVM\SVM Noten\Jahresprogramm 2017\
+            über d:\TyE\SW\Java\InstallFiles\ADM Push CAPX 2 Android.bat
+        Umlaute stürzen noch ab!!!
+        Außerdem R/O überwinden:
+            https://stackoverflow.com/questions/14477709/failed-to-push-selection-read-only-file-system-while-moving-to-sdcard
+                c:\Users\TyE\AppData\Local\Android\sdk\platform-tools\adb.exe shell "su -c mount -o rw,remount rootfs /"
+                c:\Users\TyE\AppData\Local\Android\sdk\platform-tools\adb.exe  shell "su -c chmod 777 /mnt/sdcard"
+
+    copyAssets(): Würde Pakete mitinstallieren, macht aber Probleme auf Virtuellem Device (R/O)
+        -> behoben dirch persönlichen Ordner
+
+
