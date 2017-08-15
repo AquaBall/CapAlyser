@@ -2,10 +2,13 @@ VersionsHistory zu Capalyser
 
 Bekannte Bugs:
     Rotation des Bildschirms führt zu Fehler in der Bildschirm-Aktualisierung
-    Unterer Streifen wird an jedem Bildschirm abgeschnitten, kann nur durch verscheiben des Kopfes sichbar gemacht werden
+    Unterer Streifen wird an jedem Bildschirm abgeschnitten, kann nur durch verschieben des Kopfes sichbar gemacht werden
+
+2017-08-15  TyE:  Android-Studio, Gradle, Platforms upgrade
 
 2017-08-05  V1.01
     Umlaute in Zipdateien ermöglicht. Funtioniert ab Nougat, darunter werden Umlaute mit '_' ersetzt.
+    Upload auf https://github.com AquaBall
 
 2017-08-01  V1.0
     Erster Release

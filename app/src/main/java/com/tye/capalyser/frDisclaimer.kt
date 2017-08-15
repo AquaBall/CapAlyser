@@ -31,9 +31,10 @@ class frDisclaimer : Fragment() {
 //        java.lang.NoSuchMethodError: No static method fromHtml(Ljava/lang/String;I)Landroid/text/Spanned;
 //              in class Landroid/text/Html; or its super classes (declaration of 'android.text.Html' appears in /system/framework/framework.jar)
 //              at com.tye.capalyser.frDisclaimer.onViewCreated(frDisclaimer.kt:33)
-//        txDisclaim.text = Html.fromHtml(disc,Html.FROM_HTML_MODE_COMPACT)       // Nicht Deprecated, aber stürzt ab!  .. obwohl nur auf realem Handy!!
-//        txDisclaim.text = Html.fromHtml(disc,Html.FROM_HTML_MODE_LEGACY)       // Nicht Deprecated, aber stürzt ab!  .. obwohl nur auf realem Handy!!
-        txDisclaim.text = Html.fromHtml(disc)             // Deprecated, aber funtioniert!
+//        txDisclaim.text = Html.fromHtml(disc,Html.FROM_HTML_MODE_COMPACT)       // TyE 2017-08-15, FIXME. Nicht Deprecated, aber stürzt ab!  .. obwohl nur auf realem Handy!!
+//        txDisclaim.text = Html.fromHtml(disc,Html.FROM_HTML_MODE_LEGACY )       // TyE 2017-08-15, FIXME. Nicht Deprecated, aber stürzt ab!  .. obwohl nur auf realem Handy!!
+        @Suppress("DEPRECATION")
+        txDisclaim.text = Html.fromHtml(disc)             // TyE 2017-08-15, FIXME: unsauber:  Deprecated, aber funktioniert!
     }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
