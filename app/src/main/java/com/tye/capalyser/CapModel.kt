@@ -20,6 +20,7 @@ internal class CapModel {
 
     private var capName: String = ""        // Die Capella Datei.
     fun isValid() = !(capName.isEmpty())
+    val maxAkkord = 7
 
     @Suppress("unused")
     fun liedName(): String {
@@ -39,7 +40,7 @@ internal class CapModel {
     var liedAnfang: String = ""
     private val liedTexte   = ArrayList<ArrayList<String>>()    // 2Dim: Stimmen und Strophen
     private val liedAnfänge = ArrayList<ArrayList<String>>()    // 2Dim: Stimmen und Strophen
-    private var tonVorzeichen = -99
+    private var tonVorzeichen = Int.MIN_VALUE
     val statistik = mutableListOf<CapStatistik>()
 
     @Suppress("unused") //Gar nicht war: Wird für Tonart benötigt.
@@ -74,9 +75,7 @@ internal class CapModel {
     // Evl. Position prüfen
     // evtl. Standard-Texte (frisch, majestätisch, schnell,...) ausfiltern?
     fun autor() = if (texte.size>0) texte
-            .filter { (it.system == 1) }
-//            .filter { it.text.contains("\n") }    // gibts nicht immer
-            .last().text else ""
+            .last { (it.system == 1) }.text else ""
 //    Texte ausschließen, die NUR  "1. - 2."  enthalten
 
     // Fixtext, der als letztes erscheint
@@ -172,11 +171,11 @@ internal class CapModel {
         //ToDo deaktiviert: 		struktur.clear();
         statistik.clear()
         texte.clear()
-        tonVorzeichen = -99
+        tonVorzeichen = Int.MIN_VALUE
 
         currSystem = 0
         currZeile = 0
-        currStimme = -99
+        currStimme = Int.MIN_VALUE
         currNote = 0
         akkord.clear()
     }
@@ -239,15 +238,15 @@ internal class CapModel {
 
     private var currSystem = 0
     private var currZeile = 0
-    private var currStimme = -99
+    private var currStimme = Int.MIN_VALUE
     private var currNote = 0
 
     private fun subVers(nNode: Element) {
         val silbe = nNode.textContent
-        val strophNr = Integer.parseInt(nNode.getAttribute("i")) // Die Zeilennummer heißt schlicht 'i' in den Attributen
+        val strophNr = nNode.getAttribute("i").toInt() // Die Zeilennummer heißt schlicht 'i' in den Attributen
         val blank = if (nNode.getAttribute("hyphen").isEmpty())  " " else "" // Attr-"Hyphen" regelt die Silbentrennung
 
-        while (currStimme >= liedTexte.size) liedTexte.add(ArrayList<String>())    // evtl Stimmen auffüllen:
+        while (currStimme >= liedTexte.size) liedTexte.add(ArrayList())    // evtl Stimmen auffüllen:
         val strophen = liedTexte[currStimme]
         while (strophNr >= strophen.size) strophen.add("")                        // evtl Strophen auffüllen:
         strophen[strophNr] = strophen[strophNr] + silbe.trim { it <= ' ' } + blank    // Silbe an die Strophe anhängen.
@@ -255,7 +254,7 @@ internal class CapModel {
         // To Do: Warum behandle ich den Anfang anders, wenn ich eh nur 4 Worte nehme?
         // Wenn Text in 2. Stimme liegt, dann ist der Gesamt Texte nicht mehr relevant. (Aber finde ich die Strophe dann richtig?)
         if (currSystem == 1) {
-            while (currStimme >= liedAnfänge.size) liedAnfänge.add(ArrayList<String>())    // evtl Stimmen auffüllen:
+            while (currStimme >= liedAnfänge.size) liedAnfänge.add(ArrayList())    // evtl Stimmen auffüllen:
             val strophenA = liedAnfänge[currStimme]
             while (strophNr >= strophenA.size) strophenA.add("")                        // evtl Strophen auffüllen:
             strophenA[strophNr] = strophen[strophNr]    // bisherige Strophe speichern.
@@ -266,7 +265,7 @@ internal class CapModel {
      * @param nodeRoot WurzelKnoten des XML-Document
      */
     private fun parse4Daten(nodeRoot: Node, statItem: CapStatistik) {
-        var internCounter = 0
+        var systemNr = 0
         for (node in XmlUtil.asList(nodeRoot.childNodes)) {        // Für jeden Subknoten:
             if (node.nodeType == Node.ELEMENT_NODE) {
                 val nodeName = node.nodeName
@@ -274,49 +273,65 @@ internal class CapModel {
                 var deutsch = ""
                 when (nodeName) {
                     "system", "staff", "voice" -> {
-                        internCounter++
+                        systemNr++
                         when (nodeName) {
                             "system" -> {
                                 deutsch = "System"
-                                currSystem = internCounter
+                                currSystem = systemNr
                                 currStimme = 0        // Die stimmen zähle ich manuell, weil mir die Zeile egal ist
                             }
                             "staff" -> {
                                 deutsch = "Zeile"
-                                currZeile = internCounter
+                                currZeile = systemNr
                             }
                             "voice" -> {
                                 deutsch = "Stimme"
-                                currStimme++    // nicht = internCounter!
+                                currStimme++    // nicht = systemNr!
                                 currNote = 0
                             }
                         }
-                        val neuSt = CapStatistik(deutsch+" " +internCounter)
+                        val neuSt = CapStatistik(deutsch+" " +systemNr)
                         parse4Daten(node, neuSt)    //Hier eine Rekursion aufrufen?? (Hat irgendwie mit Sammlern zu tun?)
                         statistik.add(neuSt)
                     }
-                    "duration"    // Duration und Head sind hoffentlich immer in der gleiche Reihenfolge!
+                    "chord", "rest"  // Das sind die Container für Noten und pausen
                     -> {
+                        if (currSystem == 1 && currNote < maxAkkord) currNote++
+                        while (currStimme >= akkord.size) akkord.add("")  // evtl Stimmen auffüllen:
+
+                        if (nodeName=="rest" && currSystem == 1 && currNote < maxAkkord) {
+                            for (a in XmlUtil.asList(nNode.childNodes).filter { it.nodeName == "duration" }) {
+                                var dauer:String=(a as Element).getAttribute("base")
+//                                dauer = dauer.replace("1/","")        // Bruch verkürzen, oder
+                                dauer = if (MidiUtil.pausen.get(dauer) != null) MidiUtil.duration.get(dauer).toString() else "?"
+                                akkord[currStimme] = akkord[currStimme] + dauer
+                            }
+                            akkord[currStimme] = akkord[currStimme] + "_ "
+                        }
                     }
-                    "head"        // Duration und Head sind hoffentlich immer in der gleiche Reihenfolge!
+                    "duration"
                     -> {
-                        val maxAkkord = 7
                         if (currSystem == 1 && currNote < maxAkkord) {
-                            currNote++
-                            var ton = nNode.getAttribute("pitch").replace("B", "H")        // Es wird sofort auf deutsch übersetzt
-                            // Vorzeichen '#' <alter step="1">  = '#'	Auch Tonart wird berücksichtgt!
-                            // Vorzeichen 'b' <alter step="1">  = 'b'	Auch Tonart wird berücksichtgt!
-                            // 'Auflösung' 	 <alter display="force"> und Step nach bedarf
-                            for (a in XmlUtil.asList(nNode.childNodes)) {
-                                if (a.nodeName == "alter" && a.nodeType == Node.ELEMENT_NODE) {
+                            var dauer:String=nNode.getAttribute("base")
+//                                dauer = dauer.replace("1/","")        // Bruch verkürzen, oder
+                            dauer = if (MidiUtil.pausen.get(dauer) != null) MidiUtil.duration.get(dauer).toString() else "?"
+                            akkord[currStimme] = akkord[currStimme] + dauer
+//                            akkord[currStimme] = akkord[currStimme] + nNode.getAttribute("base").replace("1/","")
+                        }
+                        // nNode.getAttribute("dots") gäbe die Punktierung
+                    }
+                    // Das impliziert, dass wir nun im Container <heads> sind:
+                    "head"        // <heads>  n*<head pitch="C5"/>  unsauber: 1x Heads, aber viele n x Head!
+                    -> {
+                        if (currSystem == 1 && currNote < maxAkkord) {
+                            var ton = nNode.getAttribute("pitch").replace("B", "H")  // sofort auf 'deutsch' übersetzen
+                            for (a in XmlUtil.asList(nNode.childNodes).filter { it.nodeName == "alter" }) {
+                                    // Vorzeichen: <alter step=1: #	 step=-1: b  Auch Tonart wird berücksichtgt!
+                                    // 'Auflösung' 	 <alter display="force"> und Step nach bedarf
                                     val s = (a as Element).getAttribute("step")
                                     if (s == "1") ton += "+"
                                     if (s == "-1") ton += "-"
-                                }
                             }
-                            while (currStimme >= akkord.size) {
-                                akkord.add("")
-                            }    // evtl Stimmen auffüllen:
                             akkord[currStimme] = akkord[currStimme] + ton + " "
                         }
                     }
@@ -328,8 +343,8 @@ internal class CapModel {
                     }
                     "beam" -> {
                     }
-                    "keySign" -> if (tonVorzeichen < -10) {    // Ich lesen NUR die erste Tonart
-                        tonVorzeichen = Integer.parseInt(nNode.getAttribute("fifths"))
+                    "keySign" -> if (tonVorzeichen < 0) {    // Ich lesen NUR die erste Tonart
+                        tonVorzeichen = nNode.getAttribute("fifths").toInt()
                     }
                     "text" -> {
                         val txt = nNode.textContent.trim { it <= ' ' }
@@ -350,7 +365,7 @@ internal class CapModel {
                 //			bei folgenden Knoten tiefer gehen,
                 // 			bereits gezählte dabei auslassen
                 //			mit '_' Eindeutigkeit sichern
-                //			und mit '_' Doppelsprünge austricksen
+                //			und mit ' ' Doppelsprünge austricksen
                 //			alle anderen Tags werden ignoriert (und nicht durchsucht).
                 if (("_document_score_systems_ s y s t e m _staves_ s t a f f _voices_ v o i c e _noteObjects_chord_lyric_verse_" +
                         "_drawObjects_drawObj_text_barline_heads_head_stem_beam_").contains(nodeName + "_")) {
@@ -358,16 +373,80 @@ internal class CapModel {
                 }
             }
         }
-        if (tonVorzeichen < -10) tonVorzeichen = 0    //C-dur wird NICHTS notiert!
+        if (tonVorzeichen < 0) tonVorzeichen = 0    //in C-dur wurde NICHTS notiert!
     }
 
+    fun String.oktav() = MidiUtil.oktav(this)
+
+    /** Die Normalisierung einer Melodie kann erst erfolgen, wenn alle Töne, aller Stimmen gelesen wurden.
+     *  Suche niedrigste Oktav: Die Dauer wurde bereits codiert (leider (noch?) keine NotenSymbole)
+     *  also ist nur mehr die Oktav als Zahl vorhanden.
+     *  Vorher: Okt 3-6
+     *  Nachher: gestrichen = ' "   kontra =  ,  (eigentlich auch groß + klein)
+     */
+    fun normalizeOktav() {
+        var minOkt = Int.MAX_VALUE
+        var maxOkt = Int.MIN_VALUE
+        val count = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0)     //QuickNDirty: vielleicht später besser
+        akkord.forEach() {
+            val einzelTöne= it.split(" +".toRegex()).filter{ it.isNotEmpty() }
+            for (t in einzelTöne) {
+//                print(" $t ")
+                val okt = t.oktav()
+                if (okt!=Int.MAX_VALUE) count[okt]++
+                if (okt<minOkt)                         minOkt = okt
+                if (okt>maxOkt && okt!=Int.MAX_VALUE)   maxOkt = okt
+            }
+        }
+        // Eigentlich sollte Quantität mitentscheiden
+//        println("TyE (CapModel): jetzt geht's los:  okt = $minOkt-$maxOkt  ")
+        if ((count[minOkt+1] > count[minOkt] * 4) &&  count[minOkt-1]==0 ) minOkt++
+
+        when (maxOkt - minOkt) {    // Ausrichtung nach Bedarf
+            0,                  // bleibt ohne Oktavierung
+            1,                  // erreicht 1 '
+            2 -> minOkt -= 1    // erreicht 2 "
+            3 -> minOkt += 0    // reicht von , bis "
+            else -> println("TyE (CapModel): jetzt geht's schief:  okt = $minOkt-$maxOkt")
+        }
+
+        val ersatz = mapOf(('0'+minOkt).toString() to   MidiUtil.okt[0],     // "," geht niccht wg. Split später, anderes Komma?
+                ('1'+ minOkt).toString() to  MidiUtil.okt[1],       // Hier will ich "", statt ' ', wegen nachfolgendem Zeichen
+                ('2'+ minOkt).toString() to  MidiUtil.okt[2],
+                ('3'+ minOkt).toString() to  MidiUtil.okt[3],
+                ('4'+ minOkt).toString() to  MidiUtil.okt[4],   // Fehler
+                ('5'+ minOkt).toString() to  MidiUtil.okt[5]    // Fehler
+        )
+        val iterate = akkord.listIterator()
+        while (iterate.hasNext()) {
+            var value = iterate.next()
+            for((v,k) in ersatz) {
+                value=value.replace(v,k)
+            }
+            iterate.set(value)
+        }
+    }
+
+    fun codiereLänge() {
+        val iterate = akkord.listIterator()
+        while (iterate.hasNext()) {
+            var value = iterate.next()
+            for((v,k) in MidiUtil.duration) {
+                value=value.replace(k,MidiUtil.durationN.getValue(v))
+            }
+            iterate.set(value)
+        }
+    }
 
     /** Die Systeme wird durchgezählt und aufgebaut.
      */
     private fun fillStatistik() {
         val neuSt = CapStatistik("neu")
         statistik.add(neuSt)
+        // TyE 2017-08-16, FIXME: aufgegeben, NotenSymbole       for ( (k,v) in MidiUtil.pausen) println("TyE (CapModel): $k  =  ${v}  ${MidiUtil.töne.get(k)} ")
         parse4Daten(capDOM!!.documentElement, neuSt)
+        normalizeOktav()
+        codiereLänge()
     }
 
     /** Die ganze CapStruktur-Liste der XML-Datei wird gezählt und aufgebaut.
@@ -375,7 +454,7 @@ internal class CapModel {
     private fun fillStruktList() {
         // Für alle Knoten:
         CapStruktur.resetChronologie()
-        for (node in XmlUtil.asList(capDOM?.getElementsByTagName("*"))) {
+        for (node in XmlUtil.asList(capDOM?.getElementsByTagName("  *"))) {
             @Suppress("UNUSED_VARIABLE")
             val strucktElement = node.nodeName
             // ToDo? Das ist noch ziemlich primitiv:

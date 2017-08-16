@@ -2,11 +2,45 @@
 Capella Utils 2017
 ==================
 
-Aktuelle 22s auf Android: 2017-08-05
+Aktuelle 22s auf Android:
 	Vorspiel:
-		Tonlängen besser darstellen
+        Und jetz ... ganze Pause wird nicht erkannt.
+        JahresProgamm 17: Ubi Caritas stürzt ab
+        Warum werden nur 6 Töne eingelesen?
+
+		Ziel: Tonlängen besser darstellen    2017-08-15
             TonLücke (unterschiedlicher Beginn der Stimmen) erkennen
-            Tonfolge beliebig lang? (bishin zum echten Vorspiel: Pausen/Tonlängen)
+            Tonfolge beliebig lang? (bishin zum echten Vorspiel: pausen/Tonlängen)
+        Step 1: Melodie mit Rhytmus (+ pausen!) lesen
+        Step 2: übergabe aus Modell?
+        Step 3: Vorspiel anpassen (Ohne Ansicht zu "strapazieren")
+            (denn bischer erfolgt Vorspiel aus Interpretation des STRINGs(!).
+            Notendarstellung lt.    http://www.unicode.org/charts/PDF/U1D100.pdf
+                Noten       1D15D
+                pausen
+        Probleme:
+            Welche Töne können auftreten:
+                1/1  1/2  1/4  1/8   oder weitere?
+                punktierte
+                pausen
+                manchmal auch Auftakt nur für EinzelStrophen
+            Töne sind noch nicht manipulierbar (nur abschneiden geht)
+            Wie werden pausen angezeigt?
+            leider wird auch schon Oktave als Zahl angegeben.
+        Ideensammlung:
+            Takt erkennen:  GrundRhytmus 1/4   1/2 ?
+            String codieren?
+            Ton 1D15D   1D15E   1D15F   1D160   1D161   1D162
+            Paus1D13B   1D13C   1D13D   1D13E   1D13F   1D140
+                /1      /2      /4      /8      /16     /32
+                .       ..      ....   ........
+                .       ..      _      __
+                |       ||      ||||   ||||||||
+                /8  /4   /2     /1
+                Blöcke?
+            Oktave mit  '  "  markieren? (Gemittelt auf bass-Basis?)
+            oder doch Class mit Realdaten im Hintergrund?
+            erster Versuch: Was geben denn die Daten her?
     DataScreens:
         TextLücken mit  ... markieren (Siehe "So a 3 an der Zahl")
         Bei Texten die Stimmsprünge/ZeilenEnde (optional) markieren
@@ -35,7 +69,7 @@ FunktionsOptimierung / Ideen:
         Stimmpfeife <-> Quint auswählen?
         "Wohin Nach Liedwahl springen"?
         SprungMenü verallgemeinern
-        Settings "ohneBegrüßung" könnte Begrüßung wegscahlten SprungMenü auf Begrüßung stellt ihn iweder her
+        Settings "ohneBegrüßung" könnte Begrüßung wegscahlten SprungMenü auf Begrüßung stellt ihn wieder her
         Soll Begrüßung im Beta immer fix bleiben?
         Soll Neustart Prefs anwenden? (optional)
         soll / kann ein Neuinstall alte Daten und Preferences resetten ?
@@ -317,13 +351,14 @@ Muster:
 					<voices>	CONTAINER
 						<voice stemDir="up">	X-mal ZÄHLEN innerhalb jedes System
 							...
-							<noteObjects>	CONTAINER
-								<clefSign clef="G2-"/>
-								<keySign fifth="2"/>
-								<timeSign time="2/4"/>
-								...
-								<chord>
+							<noteObject s>	CONTAINER       für pausen und Noten dieser Stimme in dieser Zeile!
+								  <clefSign clef="G2-"/>
+								  <keySign fifth="2"/>
+								  <timeSign time="2/4"/>
+								<rest>
+								    <duration base="1/8"/>
 									...
+								<chord>
 									<lyric>
 										<verse i="0" verseNumber="1.">Bei</verse>
 										<verse i="1">Ja,</verse>
@@ -331,7 +366,8 @@ Muster:
  									<duration base="1/8"/>
 									<heads>
 										<head pitch="C5"/>
- 
+									...
+
 
 2017-05-24 10:09 TyE:  Ausgabe  gelesen wurde: Dahoam (Maierhofer) V1.2.capx
 	Stimme 1:

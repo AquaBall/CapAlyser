@@ -10,6 +10,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.frag_play.*
+import android.graphics.Typeface
+import java.util.*
+import android.widget.TextView
+
 
 
 /** [Fragment]-Klasse für Vorspiel der Lieder. */
@@ -49,7 +53,40 @@ class frPlay : Fragment() {
         }
     }
 
+    // TyE 2017-08-15, FIXME: Versuch, weil NotenFont nicht angezeigt wird!     https://stackoverflow.com/questions/20834610/custom-fonts-not-display-in-android-4-4
+    // Ergebnis: bringt nichts
+    object TypefaceClass {
+        val cache = Hashtable<String, Typeface>()
+        operator fun get(c: Context, assetPath: String): Typeface? {
+            synchronized(cache) {
+                if (!cache.containsKey(assetPath)) {
+                    try {
+                        val t = Typeface.createFromAsset(c.assets,
+                                assetPath)
+                        cache.put(assetPath, t)
+                    } catch (e: Exception) {
+                        return null
+                    }
+                }
+                return cache.get(assetPath)
+            }
+        }
+    }
+
+    fun setFont(){  // TyE 2017-08-15, FIXME: Läuft alles nicht     weder OTF, nich TTF
+//        tvAkkorde.typeface = TypefaceClass.get(context,"fonts/notomono-regular.otf")
+
+        tvAkkorde.setTypeface(Typeface.createFromAsset(context.assets,"fonts/notomono-regular.otf"))
+
+//        val tf = Typeface.createFromAsset(context.getAssets(), "fonts/notomono-regular.otf")
+//        val tv = (TextView) findViewById(R.id.tvAkkorde)
+//        tv.typeface = tf
+
+        CapAlyserMain.log(TAG,"installed: " +tvAkkorde.typeface)
+    }
+
     private fun setButtons() {
+        setFont()
         // normierten Symbol des Tones angepasst, brauch ich für Tonvorspiel!
         fun sprungTon(ton:Int, vorzeichen:Int, halbe:Int, okt:Int)= MidiUtil.midi2Sym(ton+ halbe,vorzeichen<0) + (if (halbe >= okt) "'" else "")
         val valid = prefs.isValid
@@ -90,7 +127,9 @@ class frPlay : Fragment() {
         swTonart.setOnCheckedChangeListener { _, _ -> setButtons() }
         swTonart.isChecked= !prefs.Modus
         sbAnzahl.progress = prefs.LiedZahl -1
-
+        CapAlyserMain.log(TAG, tvAkkorde.typeface.toString())
+        setFont()
+        CapAlyserMain.log(TAG, tvAkkorde.typeface.toString())
         SoundManager.initialize(ctx) // Muss frühzeitig vorbereitet werden, weil das Ding Zeit braucht?!?
         updateInfo()
     }

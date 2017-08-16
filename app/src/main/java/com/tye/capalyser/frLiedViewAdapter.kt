@@ -89,8 +89,8 @@ class frLiedViewAdapter(private val liedListe: List<FilePls>,
         val prefs = clPrefs(view.context)
         prefs.Zip = zip.absolutePath
         prefs.Lied = lied
-        val unzipped = unZippFile(zip, lied)         //  <<--- Zip holen
-        model.setupCapDatei(unzipped)                   //  <<--- Modell lesen
+        val unzipped = unZippFile(zip, lied)        //  <<--- Zip holen
+        model.setupCapDatei(unzipped)               //  <<--- Modell lesen
         prefs.isValid = model.isValid()
         if (prefs.isValid) {                        //  <<-- in Prefs übernehmen
             prefs.liedAnfang  = model.liedAnfang
@@ -140,7 +140,7 @@ class frLiedViewAdapter(private val liedListe: List<FilePls>,
             } catch(e: Exception) {
                 continue
             }
-            var n= ze!!.name.replace(CHAR_MAXINT, CHAR_UNDERLINE)
+            val n= ze!!.name.replace(CHAR_MAXINT, CHAR_UNDERLINE)
             if (n == lied) {
                 val tempFile = File.createTempFile(n, ".tmp")
                 val fos = FileOutputStream(tempFile)
