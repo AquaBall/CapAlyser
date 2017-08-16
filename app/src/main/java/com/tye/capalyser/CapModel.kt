@@ -13,14 +13,11 @@ import java.util.zip.ZipInputStream
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 
-//ToDo deaktiviert: import javafx.collections.FXCollections;
-//ToDo deaktiviert: import javafx.collections.ObservableList;
-
 internal class CapModel {
 
     private var capName: String = ""        // Die Capella Datei.
     fun isValid() = !(capName.isEmpty())
-    val maxAkkord = 7
+    private val maxAkkord = 7
 
     @Suppress("unused")
     fun liedName(): String {
@@ -32,16 +29,16 @@ internal class CapModel {
 
     val akkord = ArrayList<String>()
 
-    var capDOM: Document? = null // die Daten in Baumform mit Nodes
-    //ToDo deaktiviert: 	private ObservableList<CapStruktur>  struktur = FXCollections.observableArrayList();
-    //ToDo deaktiviert: 	public ObservableList<CapStruktur>  getStruktur()  { return struktur; }
+    private var capDOM: Document? = null // die Daten in Baumform mit Nodes
+    // deaktiviert: 	private ObservableList<CapStruktur>  struktur = FXCollections.observableArrayList();
+    // deaktiviert: 	public ObservableList<CapStruktur>  getStruktur()  { return struktur; }
 
     var liedtext:   String = ""
     var liedAnfang: String = ""
     private val liedTexte   = ArrayList<ArrayList<String>>()    // 2Dim: Stimmen und Strophen
     private val liedAnfänge = ArrayList<ArrayList<String>>()    // 2Dim: Stimmen und Strophen
     private var tonVorzeichen = Int.MIN_VALUE
-    val statistik = mutableListOf<CapStatistik>()
+    private val statistik = mutableListOf<CapStatistik>()
 
     @Suppress("unused") //Gar nicht war: Wird für Tonart benötigt.
     private val MU = MidiUtil() // Aber ich weiß nicht wie ich importieren muss.
@@ -64,11 +61,8 @@ internal class CapModel {
             kandidat = texte
                     .filter { (it.system == 1) }
                     .filter { !it.text.contains("<Siggi") }
-        if (kandidat.isEmpty())
-            return "kein Titel"
-        else
-            return kandidat
-                .first().text
+        return if (kandidat.isEmpty()) "kein Titel"
+            else kandidat.first().text
     }
 
     // Fixtext, der in der ersten Zeile mehrzeilig ist
@@ -79,8 +73,8 @@ internal class CapModel {
 //    Texte ausschließen, die NUR  "1. - 2."  enthalten
 
     // Fixtext, der als letztes erscheint
-    fun editor() = if (texte.size>0) texte
-            .last().text else ""
+//    fun editor() = if (texte.size>0) texte
+//            .last().text else ""
 
     // alle anderen Fixtexte
     fun kommentare(): String {
@@ -114,7 +108,7 @@ internal class CapModel {
             return
         }
 
-        fillStruktList()        // CapStruktur der XML durchzählen und registrieren
+//        fillStruktList()        // CapStruktur der XML durchzählen und registrieren
         fillStatistik()        // Systeme zählen
 
         sammleLiedtext()        // Der LiedText wird aufbereitet.
@@ -296,14 +290,14 @@ internal class CapModel {
                     }
                     "chord", "rest"  // Das sind die Container für Noten und pausen
                     -> {
-                        if (currSystem == 1 && currNote < maxAkkord) currNote++
+                        if (currSystem == 1 && currNote <= maxAkkord) currNote++
                         while (currStimme >= akkord.size) akkord.add("")  // evtl Stimmen auffüllen:
 
-                        if (nodeName=="rest" && currSystem == 1 && currNote < maxAkkord) {
+                        if (nodeName=="rest" && currSystem == 1 && currNote <= maxAkkord) {
                             for (a in XmlUtil.asList(nNode.childNodes).filter { it.nodeName == "duration" }) {
                                 var dauer:String=(a as Element).getAttribute("base")
 //                                dauer = dauer.replace("1/","")        // Bruch verkürzen, oder
-                                dauer = if (MidiUtil.pausen.get(dauer) != null) MidiUtil.duration.get(dauer).toString() else "?"
+                                dauer = if (MidiUtil.duration[dauer] != null) MidiUtil.duration[dauer].toString() else "?"
                                 akkord[currStimme] = akkord[currStimme] + dauer
                             }
                             akkord[currStimme] = akkord[currStimme] + "_ "
@@ -311,10 +305,10 @@ internal class CapModel {
                     }
                     "duration"
                     -> {
-                        if (currSystem == 1 && currNote < maxAkkord) {
+                        if (currSystem == 1 && currNote <= maxAkkord) {
                             var dauer:String=nNode.getAttribute("base")
 //                                dauer = dauer.replace("1/","")        // Bruch verkürzen, oder
-                            dauer = if (MidiUtil.pausen.get(dauer) != null) MidiUtil.duration.get(dauer).toString() else "?"
+                            dauer = if (MidiUtil.duration[dauer] != null) MidiUtil.duration[dauer].toString() else "?"
                             akkord[currStimme] = akkord[currStimme] + dauer
 //                            akkord[currStimme] = akkord[currStimme] + nNode.getAttribute("base").replace("1/","")
                         }
@@ -323,7 +317,7 @@ internal class CapModel {
                     // Das impliziert, dass wir nun im Container <heads> sind:
                     "head"        // <heads>  n*<head pitch="C5"/>  unsauber: 1x Heads, aber viele n x Head!
                     -> {
-                        if (currSystem == 1 && currNote < maxAkkord) {
+                        if (currSystem == 1 && currNote <= maxAkkord) {
                             var ton = nNode.getAttribute("pitch").replace("B", "H")  // sofort auf 'deutsch' übersetzen
                             for (a in XmlUtil.asList(nNode.childNodes).filter { it.nodeName == "alter" }) {
                                     // Vorzeichen: <alter step=1: #	 step=-1: b  Auch Tonart wird berücksichtgt!
@@ -376,7 +370,7 @@ internal class CapModel {
         if (tonVorzeichen < 0) tonVorzeichen = 0    //in C-dur wurde NICHTS notiert!
     }
 
-    fun String.oktav() = MidiUtil.oktav(this)
+    private fun String.oktav() = MidiUtil.oktav(this)
 
     /** Die Normalisierung einer Melodie kann erst erfolgen, wenn alle Töne, aller Stimmen gelesen wurden.
      *  Suche niedrigste Oktav: Die Dauer wurde bereits codiert (leider (noch?) keine NotenSymbole)
@@ -384,11 +378,11 @@ internal class CapModel {
      *  Vorher: Okt 3-6
      *  Nachher: gestrichen = ' "   kontra =  ,  (eigentlich auch groß + klein)
      */
-    fun normalizeOktav() {
+    private fun normalizeOktav() {
         var minOkt = Int.MAX_VALUE
         var maxOkt = Int.MIN_VALUE
         val count = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0)     //QuickNDirty: vielleicht später besser
-        akkord.forEach() {
+        akkord.forEach {
             val einzelTöne= it.split(" +".toRegex()).filter{ it.isNotEmpty() }
             for (t in einzelTöne) {
 //                print(" $t ")
@@ -427,7 +421,7 @@ internal class CapModel {
         }
     }
 
-    fun codiereLänge() {
+    private fun codiereLänge() {
         val iterate = akkord.listIterator()
         while (iterate.hasNext()) {
             var value = iterate.next()
@@ -449,27 +443,27 @@ internal class CapModel {
         codiereLänge()
     }
 
-    /** Die ganze CapStruktur-Liste der XML-Datei wird gezählt und aufgebaut.
-     */
-    private fun fillStruktList() {
-        // Für alle Knoten:
-        CapStruktur.resetChronologie()
-        for (node in XmlUtil.asList(capDOM?.getElementsByTagName("  *"))) {
-            @Suppress("UNUSED_VARIABLE")
-            val strucktElement = node.nodeName
-            // ToDo? Das ist noch ziemlich primitiv:
-            // Eigentlich sollte das mit 'contains' gehen	(Aber ich muss ja auch addieren?!)
-            // oder HashList? (Aber geht die leicht ins TableView?)
-            @Suppress("UNUSED_VARIABLE")
-            val found = -1
-            //ToDo deaktiviert: 			for (int i=0; i<struktur.size() && found<0; i ++) {
-            //ToDo deaktiviert: 				if (struktur.get(i).getElement().equals(strucktElement)) { found =i; }
-            //ToDo deaktiviert: 			}
-
-            //ToDo deaktiviert: 			if (found<0) { struktur.add(new  CapStruktur(strucktElement,1));
-            //ToDo deaktiviert: 			} else { struktur.get(found).incAnzahl();
-            //ToDo deaktiviert: 			}
-        }
-    }
+//    ToDo deaktiviert: weil unsprünglich mkit observable (gibts aber auf Android nicht(?)).
+//    /** Die ganze CapStruktur-Liste der XML-Datei wird gezählt und aufgebaut.
+//     */
+//    private fun fillStruktList() {
+//        // Für alle Knoten:
+//        CapStruktur.resetChronologie()
+//        for (node in XmlUtil.asList(capDOM?.getElementsByTagName("  *"))) {
+//            @Suppress("UNUSED_VARIABLE")
+//            val strucktElement = node.nodeName
+//            // Eigentlich sollte das mit 'contains' gehen	(Aber ich muss ja auch addieren?!)
+//            // oder HashList? (Aber geht die leicht ins TableView?)
+//            @Suppress("UNUSED_VARIABLE")
+//            val found = -1
+//            for (int i=0; i<struktur.size() && found<0; i ++) {
+//              if (struktur.get(i).getElement().equals(strucktElement)) { found =i; }
+//            }
+//
+//            if (found<0) { struktur.add(new  CapStruktur(strucktElement,1));
+//            } else { struktur.get(found).incAnzahl();
+//            }
+//        }
+//    }
 
 }

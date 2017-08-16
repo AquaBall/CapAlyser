@@ -99,13 +99,13 @@ class MidiUtil {
 
             // Shifts registrieren und löschen
             var shift = 0
-            if (sym.contains(MidiUtil.okt[0])) shift=-1
-            if (sym.contains(MidiUtil.okt[2])) shift=1
-            if (sym.contains(MidiUtil.okt[3])) shift=2
-            if (sym.contains(MidiUtil.okt[4])) shift=3
-            if (sym.contains(MidiUtil.okt[5])) shift=4
-            sym = sym.replace("[.'\"]".toRegex(), "")    // TyE 2017-08-16, FIXME: unsauber, weil nicht variabel!
-//            sym = sym.replace("["+MidiUtil.okt[0]+MidiUtil.okt[2]+MidiUtil.okt[3]+MidiUtil.okt[4]+MidiUtil.okt[5]+"]".toRegex(), "")
+            if (sym.contains(okt[0])) shift=-1
+            if (sym.contains(okt[2])) shift=1
+            if (sym.contains(okt[3])) shift=2
+            if (sym.contains(okt[4])) shift=3
+            if (sym.contains(okt[5])) shift=4
+//            sym = sym.replace("[.'\"]".toRegex(), "")    // TyE 2017-08-16, FIXME: unsauber, weil nicht variabel!
+            sym = sym.replace("["+okt[0]+okt[2]+"\\"+okt[3]+okt[4]+okt[5]+"]".toRegex(), "")
 
             val oktC = "" //sym.replace("[^\\d]".toRegex(), "")     // ALte Version las aus der Oktave
             sym = sym.replace("[\\d]".toRegex(), "") // registrierte Oktave (und Dauer) löschen
@@ -146,26 +146,7 @@ class MidiUtil {
             }
         }
 
-        val okt = arrayListOf(".","","'","\"","=","*")
-        // Unicode Symbole, (mal sehen, ob das funktioniert) geht auf Windows, aber auf ANdroid fehlt (anscheinend) ein Font
-        // Ton 1D15D   1D15E   1D15F   1D160   1D161   1D162
-        // Paus1D13B   1D13C   1D13D   1D13E   1D13F   1D140
-        // TyE 2017-08-16, FIXME: aufgegeben:  Ich bring keine Notensymbole (UniCodeBlock) auf Android hin.
-//                "1/2" to   Character.toChars(0x1D15E), // "\uD834\uDD5E",
-        val töne = mapOf("1/1" to   String(Character.toChars(0x1D15D)), // "\uD834\uDD5D",
-                "1/2" to   String(Character.toChars(0x1D15E)), // "\uD834\uDD5E",
-                "1/4" to   String(Character.toChars(0x1D15F)), // "\uD834\uDD5F",
-                "1/8" to   String(Character.toChars(0x1D160)), // "\uD834\uDD60",
-                "1/16" to  String(Character.toChars(0x1D161)), // "\uD834\uDD61",
-                "1/32" to  String(Character.toChars(0x1D162)) // "\uD834\uDD62"
-        )
-        val pausen = mapOf("1/1" to   String(Character.toChars(0x1D13B)), // "\uD834\uDD3B",
-                "1/2" to   String(Character.toChars(0x1D13C)), // "\uD834\uDD3C",
-                "1/4" to   String(Character.toChars(0x1D13D)), // "\uD834\uDD3D",
-                "1/8" to   String(Character.toChars(0x1D13E)), // "\uD834\uDD3E",
-                "1/16" to  String(Character.toChars(0x1D13F)), // "\uD834\uDD3F",
-                "1/32" to  String(Character.toChars(0x1D140)) // "\uD834\uDD40"
-        )
+        val okt = arrayListOf(  ".",  "",  "'",  "\"",  "=",  "*")
         val duration = mapOf("1/1" to   "g", // "\uD834\uDD3B",
                 "1/2" to   "h", // "\uD834\uDD3C",
                 "1/4" to   "v", // "\uD834\uDD3D",
@@ -180,26 +161,26 @@ class MidiUtil {
                 "1/16" to  "6", // "\uD834\uDD3F",
                 "1/32" to  "3" // "\uD834\uDD40"
         )
-        // tonanalye:   [dezDauer] [alphaTon] [Oktave] {VZ}
-        // fun String.tonArr() = this.split("(?<=[A-H/+/-/'])|(?=[A-H/+/-/'])".toRegex()).filter { it.isNotEmpty() } scheiter an "3-"
-        // fun String.tonArr() = this.split("(?<=[0-9,'])|(?=[0-9,'])".toRegex()).filter { it.isNotEmpty() }  scheitert an 2zelligen Zahlen
-
-        fun String.is2stellig() = if (this[1]>='0' && this[1]<='9') 1 else 0
-        fun dauer(ton:String): Int {
-            return ton.substring(0,1+ton.is2stellig()).toInt()
-        }
-        fun ton(ton:String): Char {
-            return ton[1+ton.is2stellig()]
-        }
-        fun oktav(ton:String): Int {
-            println( " okt: "+ ton)
-            if (ton(ton)=='_') return Int.MAX_VALUE
-            return ton[2+ton.is2stellig()] - '0'
-        }
-        fun vz(ton:String): Char {
-            if (ton(ton)=='_') return ' '
-            if (ton.length < 4+ ton.is2stellig()) return ' '
-            return ton[3+ton.is2stellig()]
-        }
+        fun dauer(ton:String): Int  = ton[0].toInt()
+        fun ton  (ton:String): Char = ton[1]
+        fun oktav(ton:String): Int  = if (ton.length < 3) Int.MAX_VALUE else ton[2] - '0'
+        fun vz   (ton:String): Char = if (ton.length < 4) ' '  else ton[3]
     }
+        // TyE 2017-08-16, FIXME: aufgegeben:  Ich bring keine Notensymbole (UniCodeBlock) auf Android hin.
+/*        // Unicode Symbole, (mal sehen, ob das funktioniert) geht auf Windows, aber nicht auf Android trotz eigenem Font
+        val töne = mapOf("1/1" to   String(Character.toChars(0x1D15D)), // "\uD834\uDD5D",
+                "1/2" to   String(Character.toChars(0x1D15E)), // "\uD834\uDD5E",
+                "1/4" to   String(Character.toChars(0x1D15F)), // "\uD834\uDD5F",
+                "1/8" to   String(Character.toChars(0x1D160)), // "\uD834\uDD60",
+                "1/16" to  String(Character.toChars(0x1D161)), // "\uD834\uDD61",
+                "1/32" to  String(Character.toChars(0x1D162)) // "\uD834\uDD62"
+        )
+        val pausen = mapOf("1/1" to   String(Character.toChars(0x1D13B)), // "\uD834\uDD3B",
+                "1/2" to   String(Character.toChars(0x1D13C)), // "\uD834\uDD3C",
+                "1/4" to   String(Character.toChars(0x1D13D)), // "\uD834\uDD3D",
+                "1/8" to   String(Character.toChars(0x1D13E)), // "\uD834\uDD3E",
+                "1/16" to  String(Character.toChars(0x1D13F)), // "\uD834\uDD3F",
+                "1/32" to  String(Character.toChars(0x1D140)) // "\uD834\uDD40"
+        )
+*/
 }

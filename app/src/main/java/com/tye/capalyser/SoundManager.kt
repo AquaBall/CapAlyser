@@ -35,7 +35,7 @@ class SoundManager {
         //        } catch (NoSuchFieldException e) {
         //            e.printStackTrace();
         //        }
-        // Brutalo-Methode:
+        // TyE 2017-07-16, FIXME: unsauber: Brutalo-Methode:
         sounds[36] = soundPool.load(context, raw.m36, 1)
         sounds[37] = soundPool.load(context, raw.m37, 1)
         sounds[38] = soundPool.load(context, raw.m38, 1)

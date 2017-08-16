@@ -11,8 +11,8 @@ android {
         applicationId "com.tye.capalyser"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 102
+        versionName "V 1.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
