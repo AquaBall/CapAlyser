@@ -1,5 +1,6 @@
 package com.tye.capalyser
 
+import android.util.Log
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.Node
@@ -14,6 +15,8 @@ import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 
 internal class CapModel {
+
+    private val TAG = "TyE (play)"
 
     private var capName: String = ""        // Die Capella Datei.
     fun isValid() = !(capName.isEmpty())
@@ -68,8 +71,16 @@ internal class CapModel {
     // Fixtext, der in der ersten Zeile mehrzeilig ist
     // Evl. Position prüfen
     // evtl. Standard-Texte (frisch, majestätisch, schnell,...) ausfiltern?
-    fun autor() = if (texte.size>0) texte
-            .last { (it.system == 1) }.text else ""
+    fun autor(): String {
+        if (texte.isEmpty()) return ""
+        val tx: Text
+        return try {
+            tx = texte.last { (it.system == 1) }
+            tx.text
+        } catch (e: Exception) {
+            ""
+        }
+    }
 //    Texte ausschließen, die NUR  "1. - 2."  enthalten
 
     // Fixtext, der als letztes erscheint
@@ -96,7 +107,7 @@ internal class CapModel {
         val tempFile = doUnzip(capDatei, "score.xml")    // in Win_Std_TEMP erstellen
         reSet()                // Clean Start vorbereiten
         if (tempFile == null) {
-            System.err.println("kein SCORE gefunden")
+            Log.d(TAG,"kein SCORE gefunden")
             return
         }
 
@@ -104,7 +115,7 @@ internal class CapModel {
         makeDOM(tempFile)        // XML-DOM aus extrahierter Datei erstellen
         tempFile.delete()        // Tempfile wieder löschen.
         if (!isValid()) {
-            System.err.println("Defekt in XML!")
+            Log.d(TAG," Defekt in XML!")
             return
         }
 
@@ -162,7 +173,6 @@ internal class CapModel {
         capName = ""
         liedTexte.clear()
         liedAnfänge.clear()
-        //ToDo deaktiviert: 		struktur.clear();
         statistik.clear()
         texte.clear()
         tonVorzeichen = Int.MIN_VALUE
@@ -181,11 +191,11 @@ internal class CapModel {
             dBuilder = dbFactory.newDocumentBuilder()
             capDOM = dBuilder.parse(tempFile)
         } catch(e: Exception) {
-            System.err.println("DOM-ParseFehler: (File ungültig?) " + e.message)
+            Log.d(TAG,"DOM-ParseFehler: (File ungültig?) " + e.message)
         }
         finally {
             if (capDOM == null) {
-                println("DOM ungültig")
+                Log.d(TAG,"DOM ungültig")
                 reSet()
             }
             else
@@ -217,7 +227,7 @@ internal class CapModel {
             zis.closeEntry()
             zis.close()
         } catch (ex: IOException) {
-            ex.printStackTrace()
+            Log.d(TAG,"Unzip: " + ex.localizedMessage)
         }
         return tempFile
     }
@@ -295,8 +305,8 @@ internal class CapModel {
 
                         if (nodeName=="rest" && currSystem == 1 && currNote <= maxAkkord) {
                             for (a in XmlUtil.asList(nNode.childNodes).filter { it.nodeName == "duration" }) {
-                                var dauer:String=(a as Element).getAttribute("base")
-//                                dauer = dauer.replace("1/","")        // Bruch verkürzen, oder
+                                var dauer =(a as Element).getAttribute("base")
+                                Log.d(TAG, "Rest = $dauer");
                                 dauer = if (MidiUtil.duration[dauer] != null) MidiUtil.duration[dauer].toString() else "?"
                                 akkord[currStimme] = akkord[currStimme] + dauer
                             }
@@ -337,13 +347,12 @@ internal class CapModel {
                     }
                     "beam" -> {
                     }
-                    "keySign" -> if (tonVorzeichen < 0) {    // Ich lesen NUR die erste Tonart
-                        tonVorzeichen = nNode.getAttribute("fifths").toInt()
+                    "keySign" -> {
+                        if (tonVorzeichen == Int.MIN_VALUE) // Ich lesen NUR die erste Tonart
+                            tonVorzeichen = nNode.getAttribute("fifths").toInt()
                     }
                     "text" -> {
                         val txt = nNode.textContent.trim { it <= ' ' }
-                        //					System.out.println("   ("+currSystem+"/"+currZeile+"/"+currStimme+")  '" + txt.replaceAll("\n", "_\\n_") + "'" )
-
                         if (txt.length > 2) {
                             statItem.fixtexte++
                             texte.add(Text(txt, currSystem, currZeile, currStimme))
@@ -367,13 +376,12 @@ internal class CapModel {
                 }
             }
         }
-        if (tonVorzeichen < 0) tonVorzeichen = 0    //in C-dur wurde NICHTS notiert!
+        if (tonVorzeichen < Int.MIN_VALUE) tonVorzeichen = 0    //in C-dur wurde NICHTS notiert!
     }
 
-    private fun String.oktav() = MidiUtil.oktav(this)
 
     /** Die Normalisierung einer Melodie kann erst erfolgen, wenn alle Töne, aller Stimmen gelesen wurden.
-     *  Suche niedrigste Oktav: Die Dauer wurde bereits codiert (leider (noch?) keine NotenSymbole)
+     *  Suche niedrigste Oktav. Die Dauer wurde bereits codiert (leider (noch?) keine NotenSymbole),
      *  also ist nur mehr die Oktav als Zahl vorhanden.
      *  Vorher: Okt 3-6
      *  Nachher: gestrichen = ' "   kontra =  ,  (eigentlich auch groß + klein)
@@ -385,50 +393,41 @@ internal class CapModel {
         akkord.forEach {
             val einzelTöne= it.split(" +".toRegex()).filter{ it.isNotEmpty() }
             for (t in einzelTöne) {
-//                print(" $t ")
-                val okt = t.oktav()
+                val okt = MidiUtil.oktave(t)
                 if (okt!=Int.MAX_VALUE) count[okt]++
                 if (okt<minOkt)                         minOkt = okt
                 if (okt>maxOkt && okt!=Int.MAX_VALUE)   maxOkt = okt
             }
         }
-        // Eigentlich sollte Quantität mitentscheiden
-//        println("TyE (CapModel): jetzt geht's los:  okt = $minOkt-$maxOkt  ")
+        //  Quantität soll mitentscheiden:
         if ((count[minOkt+1] > count[minOkt] * 4) &&  count[minOkt-1]==0 ) minOkt++
 
-        when (maxOkt - minOkt) {    // Ausrichtung nach Bedarf
+        when (maxOkt - minOkt) {// Ausrichtung nach Bedarf
             0,                  // bleibt ohne Oktavierung
             1,                  // erreicht 1 '
             2 -> minOkt -= 1    // erreicht 2 "
             3 -> minOkt += 0    // reicht von , bis "
-            else -> println("TyE (CapModel): jetzt geht's schief:  okt = $minOkt-$maxOkt")
+            else -> Log.d(TAG," jetzt geht's schief:  okt = $minOkt-$maxOkt")
         }
 
-        val ersatz = mapOf(('0'+minOkt).toString() to   MidiUtil.okt[0],     // "," geht niccht wg. Split später, anderes Komma?
+        val oktErsatz = mapOf(('0'+minOkt).toString() to   MidiUtil.okt[0],     // "," geht nicht wg. Split später, anderes Komma?
                 ('1'+ minOkt).toString() to  MidiUtil.okt[1],       // Hier will ich "", statt ' ', wegen nachfolgendem Zeichen
                 ('2'+ minOkt).toString() to  MidiUtil.okt[2],
                 ('3'+ minOkt).toString() to  MidiUtil.okt[3],
                 ('4'+ minOkt).toString() to  MidiUtil.okt[4],   // Fehler
                 ('5'+ minOkt).toString() to  MidiUtil.okt[5]    // Fehler
         )
-        val iterate = akkord.listIterator()
-        while (iterate.hasNext()) {
-            var value = iterate.next()
-            for((v,k) in ersatz) {
-                value=value.replace(v,k)
-            }
-            iterate.set(value)
+        for (i in 0 until akkord.size) {
+            for((v,k) in oktErsatz) akkord[i]=akkord[i].replace(v,k)
         }
     }
 
+    /** Nachdem nun die Oktaven als Striche kodiert sind, wied die Dauer als Zahl angegeben:
+     *  1/2/4/8/6/3
+     */
     private fun codiereLänge() {
-        val iterate = akkord.listIterator()
-        while (iterate.hasNext()) {
-            var value = iterate.next()
-            for((v,k) in MidiUtil.duration) {
-                value=value.replace(k,MidiUtil.durationN.getValue(v))
-            }
-            iterate.set(value)
+        for (i in 0 until akkord.size) {
+            for((v,k) in MidiUtil.duration) akkord[i]=akkord[i].replace(k,MidiUtil.durationN.getValue(v))
         }
     }
 
@@ -437,13 +436,13 @@ internal class CapModel {
     private fun fillStatistik() {
         val neuSt = CapStatistik("neu")
         statistik.add(neuSt)
-        // TyE 2017-08-16, FIXME: aufgegeben, NotenSymbole       for ( (k,v) in MidiUtil.pausen) println("TyE (CapModel): $k  =  ${v}  ${MidiUtil.töne.get(k)} ")
+        // TyE 2017-08-16, FIX ME: aufgegeben, NotenSymbole       for ( (k,v) in MidiUtil.pausen) Log.d(TAG," $k  =  ${v}  ${MidiUtil.töne.get(k)} ")
         parse4Daten(capDOM!!.documentElement, neuSt)
         normalizeOktav()
         codiereLänge()
     }
 
-//    ToDo deaktiviert: weil unsprünglich mkit observable (gibts aber auf Android nicht(?)).
+//    To Do deaktiviert: weil unsprünglich mkit observable (gibts aber auf Android nicht(?)).
 //    /** Die ganze CapStruktur-Liste der XML-Datei wird gezählt und aufgebaut.
 //     */
 //    private fun fillStruktList() {

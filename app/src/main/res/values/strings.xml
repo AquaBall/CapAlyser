@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">CapAlyser 1.0</string>
-    <string name="app_vers">V 1.02 bis</string>
-    <string name="valid_until" tools:ignore="TypographyDashes">2017-09-30</string>
+    <string name="app_name">CapAlyser 1.1</string>
+    <string name="app_vers">V 1.1  bis</string>
+    <string name="valid_until" tools:ignore="TypographyDashes">2017-10-31</string>
     <string name="betaAlt">Beta-version veraltet!</string>
     <string name="app_copR">© TyE2017</string>
 

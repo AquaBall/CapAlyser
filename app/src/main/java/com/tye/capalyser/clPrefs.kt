@@ -11,7 +11,7 @@ class clPrefs(context: Context) {
     private val PRE_STARTSCREEN = "SCREEN"  ; var Screen: String     ; get() = prefs.getString   (PRE_STARTSCREEN, "")   ; set (value) = prefs.edit().putString   (PRE_STARTSCREEN , value).apply()
     private val PRE_STARTMODE   = "MODE"    ; var Modus: Boolean     ; get() = prefs.getBoolean  (PRE_STARTMODE  , true) ; set (value) = prefs.edit().putBoolean  (PRE_STARTMODE   , value).apply()
     private val PREF_DISCLAIM   = "DISCLAIM"; var Disc: Boolean      ; get() = prefs.getBoolean  (PREF_DISCLAIM  , true) ; set (value) = prefs.edit().putBoolean  (PREF_DISCLAIM   , value).apply()
-    private val PREF_LIEDDAUER  = "LIEDDAUER";var LiedDauer: Int     ; get() = prefs.getInt      (PREF_LIEDDAUER , 1)    ; set (value) = prefs.edit().putInt      (PREF_LIEDDAUER  , value).apply()
+    private val PREF_LIEDDAUER  = "LIEDDAUER";var LiedDauer: Int     ; get() = prefs.getInt      (PREF_LIEDDAUER , 2)    ; set (value) = prefs.edit().putInt      (PREF_LIEDDAUER  , value).apply()
     private val PREF_LIEDZAHL   = "LIEDZAHL"; var LiedZahl: Int      ; get() = prefs.getInt      (PREF_LIEDZAHL  , 6)    ; set (value) = prefs.edit().putInt      (PREF_LIEDZAHL   , value).apply()
     private val PREF_ARTDAUER   = "ARTDAUER"; var ArtDauer: Int      ; get() = prefs.getInt      (PREF_ARTDAUER  , 2)    ; set (value) = prefs.edit().putInt      (PREF_ARTDAUER   , value).apply()
     private val PREF_ANSICHT    = "ANSICHT" ; var Ansicht: Boolean   ; get() = prefs.getBoolean  (PREF_ANSICHT   , false); set (value) = prefs.edit().putBoolean  (PREF_ANSICHT    , value).apply()

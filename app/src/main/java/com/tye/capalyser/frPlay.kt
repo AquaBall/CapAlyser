@@ -11,15 +11,14 @@ import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.frag_play.*
 import android.graphics.Typeface
+import android.util.Log
 import java.util.*
-import android.widget.TextView
-
 
 
 /** [Fragment]-Klasse für Vorspiel der Lieder. */
 class frPlay : Fragment() {
 
-    var vorspielZeit: Int = 0
+    var spielZeit: Int = 0
     lateinit var akkord:  ArrayList<String> // Einzelzeilen in Prefs, brauch ich als Array.
     lateinit var prefs : clPrefs
     lateinit var ctx : Context
@@ -53,40 +52,39 @@ class frPlay : Fragment() {
         }
     }
 
-    // TyE 2017-08-15, FIXME: Versuch, weil NotenFont nicht angezeigt wird!     https://stackoverflow.com/questions/20834610/custom-fonts-not-display-in-android-4-4
-    // Ergebnis: bringt nichts
-    object TypefaceClass {
-        val cache = Hashtable<String, Typeface>()
-        operator fun get(c: Context, assetPath: String): Typeface? {
-            synchronized(cache) {
-                if (!cache.containsKey(assetPath)) {
-                    try {
-                        val t = Typeface.createFromAsset(c.assets,
-                                assetPath)
-                        cache.put(assetPath, t)
-                    } catch (e: Exception) {
-                        return null
-                    }
-                }
-                return cache.get(assetPath)
-            }
-        }
-    }
-
-    fun setFont(){  // TyE 2017-08-15, FIXME: Läuft alles nicht     weder OTF, nich TTF
+//    // TyE 2017-08-15, FIXME: Versuch, weil NotenFont nicht angezeigt wird!     https://stackoverflow.com/questions/20834610/custom-fonts-not-display-in-android-4-4
+//    // Ergebnis: bringt nichts
+//    object TypefaceClass {
+//        val cache = Hashtable<String, Typeface>()
+//        operator fun get(c: Context, assetPath: String): Typeface? {
+//            synchronized(cache) {
+//                if (!cache.containsKey(assetPath)) {
+//                    try {
+//                        val t = Typeface.createFromAsset(c.assets,
+//                                assetPath)
+//                        cache.put(assetPath, t)
+//                    } catch (e: Exception) {
+//                        return null
+//                    }
+//                }
+//                return cache.get(assetPath)
+//            }
+//        }
+//    }
+//
+//    fun setFont(){  // TyE 2017-08-15, FIXME: Läuft alles nicht     weder OTF, nich TTF   => aufgegeben
 //        tvAkkorde.typeface = TypefaceClass.get(context,"fonts/notomono-regular.otf")
-
-        tvAkkorde.setTypeface(Typeface.createFromAsset(context.assets,"fonts/notomono-regular.otf"))
-
-//        val tf = Typeface.createFromAsset(context.getAssets(), "fonts/notomono-regular.otf")
-//        val tv = (TextView) findViewById(R.id.tvAkkorde)
-//        tv.typeface = tf
-
-        CapAlyserMain.log(TAG,"installed: " +tvAkkorde.typeface)
-    }
+//
+//        tvAkkorde.setTypeface(Typeface.createFromAsset(context.assets,"fonts/notomono-regular.otf"))
+//
+////        val tf = Typeface.createFromAsset(context.getAssets(), "fonts/notomono-regular.otf")
+////        val tv = (TextView) findViewById(R.id.tvAkkorde)
+////        tv.typeface = tf
+//
+//        CapAlyserMain.log(TAG,"installed: " +tvAkkorde.typeface)
+//    }
 
     private fun setButtons() {
-        setFont()
         // normierten Symbol des Tones angepasst, brauch ich für Tonvorspiel!
         fun sprungTon(ton:Int, vorzeichen:Int, halbe:Int, okt:Int)= MidiUtil.midi2Sym(ton+ halbe,vorzeichen<0) + (if (halbe >= okt) "'" else "")
         val valid = prefs.isValid
@@ -128,7 +126,7 @@ class frPlay : Fragment() {
         swTonart.isChecked= !prefs.Modus
         sbAnzahl.progress = prefs.LiedZahl -1
         CapAlyserMain.log(TAG, tvAkkorde.typeface.toString())
-        setFont()
+//        setFont()
         CapAlyserMain.log(TAG, tvAkkorde.typeface.toString())
         SoundManager.initialize(ctx) // Muss frühzeitig vorbereitet werden, weil das Ding Zeit braucht?!?
         updateInfo()
@@ -138,14 +136,23 @@ class frPlay : Fragment() {
     fun spieleTon(view: View) {
         fun String.ersterTon()= this.split(" ".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0] + " "
         val bt = view.id
-        var töne = sbAnzahl.progress + 1             // Tonfolge aus slider
-        vorspielZeit = sbDauer.progress * 250     // Spieldauer aus slider
+        var töne = sbAnzahl.progress + 1       // Tonfolge aus slider
+        spielZeit = sbDauer.progress * 250     // Spieldauer aus slider
 
-        if (swTonart.isChecked) {                    // Tonart wird (meist) chorisch vorgespielt
+        if (swTonart.isChecked) {              // Tonart wird (meist) chorisch vorgespielt
             if (bt == R.id.btAkkord) {
-                val anfang = btS4.text.toString() + " " + btS3.text + " " + btS2.text + " " + btS1.text + " "
-                playSequenz(anfang, 4)    // wenns überhaupt 4 gibt!
-            } else {                                    // AnfangsNote wird einzeln vorgespielt
+                var d = ""
+                when (sbDauer.progress) {
+                    0 ->    d=""
+                    1 ->    d="8"
+                    2 ->    d="4"
+                    3 ->    d="2"
+                    4 ->    d="1"
+                }
+                val anfang = d + btS4.text + " "+ d + btS3.text + " "+ d + btS2.text + " "+ d + btS1.text + " "
+                Log.d(TAG, "${sbDauer.progress}: $d  $anfang");
+                playSequenz(anfang, 4)   // wenns überhaupt 4 gibt!
+            } else {                           // AnfangsNote wird einzeln vorgespielt
                 töne = 0
                 playSequenz((view as Button).text.toString() + "", 1)
             }
@@ -153,7 +160,7 @@ class frPlay : Fragment() {
             if (bt == R.id.btAkkord) {
                 töne = 4
                 var anfang = ""
-                if (akkord.size>4) anfang +=       akkord[4].ersterTon()
+                if (akkord.size>4) anfang += akkord[4].ersterTon()
                 if (akkord.size>3) anfang += " " + akkord[3].ersterTon()
                 if (akkord.size>2) anfang += " " + akkord[2].ersterTon()
                 if (akkord.size>1) anfang += " " + akkord[1].ersterTon()
@@ -168,21 +175,19 @@ class frPlay : Fragment() {
                         R.id.btS4 -> playSequenz(akkord[4], töne)
                     }
                 } catch(e: Exception) {
-                    CapAlyserMain.log(TAG,"Vermutlich leere Stimme.")   // ToDo Fehler tritt schon bei AKkord auf, nicht erst bei PlaySequenz()
+                    CapAlyserMain.log(TAG,"Vermutlich leere Stimme.")
                 }
             }
         }
-        if (töne * vorspielZeit > 250) {      // ich kanns mir erlauben, die Anzeige NACH dem Abspielbefehl anzupassen!
+        if (töne * spielZeit > 250) {      // ich kanns mir erlauben, die Anzeige NACH dem Abspielbefehl anzupassen!
             arrayOf(btS1, btS2, btS3, btS4, btAkkord).forEach { it.isEnabled=false }
+            Handler().postDelayed(// und die Wiederherstellung trotzdem sofort veranlassen.
+                    {  arrayOf(btS1, btS2, btS3, btS4, btAkkord).forEach { it.isEnabled=true }
+                    }, (spielZeit-100).toLong())
         }
-        Handler().postDelayed(// und die Wiederherstellung trotzdem sofort veranlassen.
-                {  arrayOf(btS1, btS2, btS3, btS4, btAkkord).forEach { it.isEnabled=true }
-                }, (vorspielZeit * töne).toLong())
     }
 
-    fun playSequenz(seq: String, töne: Int) {
-        MidiUtil.playSequenz(context,seq,töne,vorspielZeit)
-    }
+    fun playSequenz(seq: String, töne: Int) { spielZeit = MidiUtil.playSequenz(context,seq,töne, spielZeit) }   // Setzt die reale Zeit (z.B. für Button-Disable)
 
     override fun onAttachFragment(childFragment: Fragment?) {
         super.onAttachFragment(childFragment)

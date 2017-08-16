@@ -4,6 +4,10 @@ Bekannte Bugs:
     Rotation des Bildschirms führt zu Fehler in der Bildschirm-Aktualisierung
     Unterer Streifen wird an jedem Bildschirm abgeschnitten, kann nur durch verschieben des Kopfes sichbar gemacht werden
 
+2017-08-16  TyE:  V1.1 Freigabe
+    Mit korrektem Vorspiel nach Tonlänge
+    valid bis 2017-10-31
+
 2017-08-16  TyE:  V1.02
     Oktavierung der Anfänge auf Strich-Nomenklatur geändert ( , ' " )
     Notenlänge vorbereitet. Es fehlt noch: Vorspiel nach Länge

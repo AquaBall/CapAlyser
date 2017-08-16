@@ -3,47 +3,7 @@ Capella Utils 2017
 ==================
 
 Aktuelle 22s auf Android:
-	Vorspiel:
-        Und jetz ... ganze Pause wird nicht erkannt.
-        JahresProgamm 17: Ubi Caritas stürzt ab
-        Warum werden nur 6 Töne eingelesen?
-
-		Ziel: Tonlängen besser darstellen    2017-08-15
-            TonLücke (unterschiedlicher Beginn der Stimmen) erkennen
-            Tonfolge beliebig lang? (bishin zum echten Vorspiel: pausen/Tonlängen)
-        Step 1: Melodie mit Rhytmus (+ pausen!) lesen
-        Step 2: übergabe aus Modell?
-        Step 3: Vorspiel anpassen (Ohne Ansicht zu "strapazieren")
-            (denn bischer erfolgt Vorspiel aus Interpretation des STRINGs(!).
-            Notendarstellung lt.    http://www.unicode.org/charts/PDF/U1D100.pdf
-                Noten       1D15D
-                pausen
-        Probleme:
-            Welche Töne können auftreten:
-                1/1  1/2  1/4  1/8   oder weitere?
-                punktierte
-                pausen
-                manchmal auch Auftakt nur für EinzelStrophen
-            Töne sind noch nicht manipulierbar (nur abschneiden geht)
-            Wie werden pausen angezeigt?
-            leider wird auch schon Oktave als Zahl angegeben.
-        Ideensammlung:
-            Takt erkennen:  GrundRhytmus 1/4   1/2 ?
-            String codieren?
-            Ton 1D15D   1D15E   1D15F   1D160   1D161   1D162
-            Paus1D13B   1D13C   1D13D   1D13E   1D13F   1D140
-                /1      /2      /4      /8      /16     /32
-                .       ..      ....   ........
-                .       ..      _      __
-                |       ||      ||||   ||||||||
-                /8  /4   /2     /1
-                Blöcke?
-            Oktave mit  '  "  markieren? (Gemittelt auf bass-Basis?)
-            oder doch Class mit Realdaten im Hintergrund?
-            erster Versuch: Was geben denn die Daten her?
-    DataScreens:
-        TextLücken mit  ... markieren (Siehe "So a 3 an der Zahl")
-        Bei Texten die Stimmsprünge/ZeilenEnde (optional) markieren
+    Ablauf ankündigen
     Bugs:
         Unterer Streifen wird an jedem Bildschirm abgeschnitten
         Tablet in Querformat = 2 x hoch
@@ -66,11 +26,10 @@ Aktuelle 22s auf Android:
 
 FunktionsOptimierung / Ideen:
     Prefs, Settings
-        Stimmpfeife <-> Quint auswählen?
         "Wohin Nach Liedwahl springen"?
-        SprungMenü verallgemeinern
-        Settings "ohneBegrüßung" könnte Begrüßung wegscahlten SprungMenü auf Begrüßung stellt ihn wieder her
-        Soll Begrüßung im Beta immer fix bleiben?
+        Settings "ohneBegrüßung"
+            könnte Begrüßung im Menü wegschalten SprungMenü auf Begrüßung stellt ihn wieder her
+            Soll Begrüßung im Beta immer fix bleiben?
         Soll Neustart Prefs anwenden? (optional)
         soll / kann ein Neuinstall alte Daten und Preferences resetten ?
 	DateiLoading:
@@ -82,26 +41,32 @@ FunktionsOptimierung / Ideen:
         InfoFeld: RTF oder css (Parameter)
         	Titel an Potition erkennen?
         	Autor	an Mehrzeilig und ":" erkennen?
+        TextLücken mit  ... markieren (Siehe "So a 3 an der Zahl")
+        Bei Texten die Stimmsprünge/ZeilenEnde (optional) markieren
 	Optik:
 	    Tablet mit waagrecht=3 Portrait=4  Fragmenten gleichzeitig
-    Stimpfeife
-        ProfiModus
-        Steigend/fallend
-        (Tonleitern haben nicht ganz mit Akkord zu tun)
-	Vorspiel:
-        oktavieren nach unten (/oben)
-		transponieren anbieten?
+	    Darstellen mit Notensymbolen
+		Tonlängen besser darstellen
 	    Cool wäre, wenn der LängenSlider sich im Listview spiegeln würde
-        Die Stimmen zählung ist manchmal falsch, (Wo denn? ... wegen 1. Zeile zusätzlich?)
-		Anzahl der Stimmen soll Buttons erstellen/deaktivieren (Sollte auch bei TextErkennung Helfen)
-        Ich könnte evtl sogar VorspielAnzahl + Länge aus OriginalTakt erkennen? 4/4 =>4  3/4=>6?
-	    Akkord: erste Takt graphisch darstellen?
+		Anzahl der Stimmen könnte Buttons erstellen/deaktivieren (Sollte auch bei TextErkennung Helfen)
 	    Töne beim Vorpiel animieren?
+    Stimmpfeife
+        Steigend/fallend
+        nur im "ProfiModus" alle Tonarten (und neue dazu)
+            (Tonleitern haben nicht ganz mit Akkord zu tun)
+        Stimmpfeife <-> Quint auswählen?
+            SprungMenü dazu verallgemeinern
 	Vorspiel:
-		Die 6. Oktav wird benötigt, hat aber keine Ton-Datei,
-		    oder soll ich dann 1 Oktav tiefer gehen?
-		    Sind da Noten falsch geschrieben (von Siggi ohne 8th?)?
-		    Josef meint, dass manchmal Sopran zu hören ist.
+		transponieren anbieten?
+            oktavieren anbieten nach unten (/oben)
+        TonLücke (unterschiedlicher Beginn der Stimmen) erkennen
+            Problem bei AkkordVorspiel
+        Tonfolge beliebig lang? (bishin zum echten Vorspiel: pausen/Tonlängen)
+            scheitert an Stimmen zählung
+            Die Stimmen zählung ist manchmal falsch, (Wo denn? ... wegen 1. Zeile zusätzlich?)
+        Ich könnte evtl sogar VorspielAnzahl(Takt + Auftakt) + Länge aus OriginalTakt erkennen? 4/4 =>4  3/4=>6?
+            Tempo übernehmen?
+	    Akkord: erste Takt graphisch darstellen?
 	ProgrammCode verbessern:
 		Statt Println Log + tag verwenden + ausmisten (Debug level)
 		Toast konfigurierbar abschalten
@@ -114,10 +79,8 @@ FunktionsOptimierung / Ideen:
         Mittel: PythonScript, oder Zusatzprogramme, oder Java, oder Notepad?
     Weiterlernen:
         Test-App?
-        Versionierung?
-        GitHub-Konto?
+        Versionierung zählen?
          Allgemein ungelöste NervenZieher:
-            LiedDaten im DatenBlatt     // Porblem war: ursprünglich reichte Variable (Obserable?) muste auf Funktion umgebaut werden.
             Wann brauch ich diees "Context" und wie bekomm ich das z.B. für Toast... in DatenClassen?
             Wann sind denn Felder bereit zum anzeigen? Muss ich bei Fragment, oder bei PageAdapter oder bei Swipe-Activity nachschauen?
          Kotlin optimierungen:
@@ -232,7 +195,7 @@ Welche Spanne brauch ich (für uns Keine Frauen/Kinder/Instrumente)
 			bis C5 über System (für Jodler)
 		=> C2-C5 = 3 x 12 Halbtöne
 	TonDateien wurden erzeugt mit Wolfram:
-		Do[Export[ StringJoin["d:\\TyE\\SW\\Java\\Töne\\Ton", ToString[60 + i], ".mp3"], Sound[SoundNote[i, .75, "BrightPiano"]]], {i, -12*2, 12*2}]
+		Do[Export[ StringJoin["d:\\TyE\\SW\\Java\\Töne\\Ton", ToString[60 + i], ".mp3"], Sound[SoundNote[i, .75, "BrightPiano"]]], {i, -12*2, 12*3}]
 		Anhören geht mit:	Do[EmitSound[Sound[SoundNote[i, .75, "BrightPiano"]]], {i, -12*2, 12*2}]
 					oder:	c := -12; EmitSound[Sound[SoundNote[{c + 0, c + 4, c + 7, c + 12}, 1]]]
 
@@ -405,3 +368,48 @@ Muster:
         -> behoben dirch persönlichen Ordner
 
 
+2017-08-16  TyE:  Gelöste Probleme: (alle bisherigen nicht notiert, nur gelöscht)
+    "Ubi Caritas" stürzt ab     (kein Autor erkennbar, RTF?)
+    "Und jetz ..." ganze Pause wird nicht erkannt.  "1"  statt "1/1"
+
+    Warum werden nur 6 Töne eingelesen?     ( '<'   !=  '<='  )
+
+    Nomenklatur geändert:  Pausen, Oktave mit Strichen, Dauer mit Zahl (NotenSymbol gelingt mir nicht)
+        Step 1: Melodie mit Rhytmus (+ pausen!) lesen
+        Step 2: übergabe aus Modell?
+        Step 3: Vorspiel anpassen (Ohne Ansicht zu "strapazieren")
+            (denn bischer erfolgt Vorspiel aus Interpretation des STRINGs(!).
+            Notendarstellung lt.    http://www.unicode.org/charts/PDF/U1D100.pdf
+                Noten       1D15D
+                pausen
+        Probleme:
+            Welche Töne können auftreten:
+                1/1  1/2  1/4  1/8   oder weitere?
+                punktierte
+                pausen
+                manchmal auch Auftakt nur für EinzelStrophen
+            Töne sind noch nicht manipulierbar (nur abschneiden geht)
+            Wie werden pausen angezeigt?
+            leider wird auch schon Oktave als Zahl angegeben.
+        Ideensammlung:
+            Takt erkennen:  GrundRhytmus 1/4   1/2 ?
+            String codieren?
+            Ton 1D15D   1D15E   1D15F   1D160   1D161   1D162
+            Paus1D13B   1D13C   1D13D   1D13E   1D13F   1D140
+                /1      /2      /4      /8      /16     /32
+                .       ..      ....   ........
+                .       ..      _      __
+                |       ||      ||||   ||||||||
+                /8  /4   /2     /1
+                Blöcke?
+            Oktave mit  '  "  markieren? (Gemittelt auf bass-Basis?)
+            oder doch Class mit Realdaten im Hintergrund?
+            erster Versuch: Was geben denn die Daten her?
+	Vorspiel:
+		Die 6. Oktav wird benötigt, hat aber keine Ton-Datei,
+		    oder soll ich dann 1 Oktav tiefer gehen?
+		    Sind da Noten falsch geschrieben (von Siggi ohne 8th?)?
+		    Josef meint, dass manchmal Sopran zu hören ist.
+        Step 3: Vorspiel anpassen (Ohne Ansicht zu "strapazieren")
+    GitHub-Konto? ok, (free)
+    LiedDaten im DatenBlatt     // Problem war: ursprünglich reichte Variable (Obserable?) das musste nun auf Funktion umgebaut werden.

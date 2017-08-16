@@ -37,6 +37,7 @@ class SoundManager {
         //        }
         // TyE 2017-07-16, FIXME: unsauber: Brutalo-Methode:
         sounds[36] = soundPool.load(context, raw.m36, 1)
+
         sounds[37] = soundPool.load(context, raw.m37, 1)
         sounds[38] = soundPool.load(context, raw.m38, 1)
         sounds[39] = soundPool.load(context, raw.m39, 1)
@@ -49,6 +50,7 @@ class SoundManager {
         sounds[46] = soundPool.load(context, raw.m46, 1)
         sounds[47] = soundPool.load(context, raw.m47, 1)
         sounds[48] = soundPool.load(context, raw.m48, 1)
+
         sounds[49] = soundPool.load(context, raw.m49, 1)
         sounds[50] = soundPool.load(context, raw.m50, 1)
         sounds[51] = soundPool.load(context, raw.m51, 1)
@@ -61,6 +63,7 @@ class SoundManager {
         sounds[58] = soundPool.load(context, raw.m58, 1)
         sounds[59] = soundPool.load(context, raw.m59, 1)
         sounds[60] = soundPool.load(context, raw.m60, 1)
+
         sounds[61] = soundPool.load(context, raw.m61, 1)
         sounds[62] = soundPool.load(context, raw.m62, 1)
         sounds[63] = soundPool.load(context, raw.m63, 1)
@@ -73,8 +76,26 @@ class SoundManager {
         sounds[70] = soundPool.load(context, raw.m70, 1)
         sounds[71] = soundPool.load(context, raw.m71, 1)
         sounds[72] = soundPool.load(context, raw.m72, 1)
+
         sounds[73] = soundPool.load(context, raw.m73, 1)
         sounds[74] = soundPool.load(context, raw.m74, 1)
+        sounds[75] = soundPool.load(context, raw.m75, 1)
+        sounds[76] = soundPool.load(context, raw.m76, 1)
+        sounds[77] = soundPool.load(context, raw.m77, 1)
+        sounds[78] = soundPool.load(context, raw.m78, 1)
+        sounds[79] = soundPool.load(context, raw.m79, 1)
+        sounds[80] = soundPool.load(context, raw.m80, 1)
+        sounds[81] = soundPool.load(context, raw.m81, 1)
+        sounds[82] = soundPool.load(context, raw.m82, 1)
+        sounds[83] = soundPool.load(context, raw.m83, 1)
+        sounds[84] = soundPool.load(context, raw.m84, 1)
+
+        sounds[85] = soundPool.load(context, raw.m85, 1)
+        sounds[86] = soundPool.load(context, raw.m86, 1)
+        sounds[87] = soundPool.load(context, raw.m87, 1)
+        sounds[88] = soundPool.load(context, raw.m88, 1)
+        sounds[89] = soundPool.load(context, raw.m89, 1)
+        sounds[90] = soundPool.load(context, raw.m90, 1)
     }
 
     fun playClickSound(sound: Int) = soundPool.play(sounds[sound], 1.0f, 1.0f, 0, 0, 1.0f)

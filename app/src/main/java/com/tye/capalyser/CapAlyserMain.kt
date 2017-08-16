@@ -15,7 +15,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class CapAlyserMain : frLieder.lstnLied, frDisclaimer.clickArrowListener, AppCompatActivity() {
 
@@ -66,13 +65,6 @@ class CapAlyserMain : frLieder.lstnLied, frDisclaimer.clickArrowListener, AppCom
             else -> if (preBegrues) fDisclaimer.show() else frLieder().show()
         }
         root=filesDir
-        @SuppressLint("SimpleDateFormat")
-        if (Date().after(SimpleDateFormat("yyyy-MM-dd").parse(this.getString(R.string.valid_until)))) {
-            Log.d(TAG,getString(R.string.betaAlt))
-            Toast.makeText(this, getString(R.string.betaAlt), Toast.LENGTH_SHORT).show()
-            TimeUnit.SECONDS.sleep(1)
-            System.exit(99)
-        }
         copyAssets()
     }
 
@@ -82,6 +74,15 @@ class CapAlyserMain : frLieder.lstnLied, frDisclaimer.clickArrowListener, AppCom
 //        val seiten = arrayOf(frLieder().titel(), frQuint().titel(), frSetting().titel(), frData().titel())
         //ToDO add Menues manuell
         // menu.add()
+
+        // Beta-Test: Funktioniert einigermaßen, aber seltsamer Ort.
+        @SuppressLint("SimpleDateFormat")
+        val ende =  SimpleDateFormat("yyyy-MM-dd").parse(this.getString(R.string.valid_until))
+        if (Date().after(ende)) {
+            Log.d(TAG,getString(R.string.betaAlt))
+            Thread.sleep(3_000)  // wait for 1 second
+            System.exit(99)
+        }
         return true}
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -101,6 +102,12 @@ class CapAlyserMain : frLieder.lstnLied, frDisclaimer.clickArrowListener, AppCom
             Log.d(TAG,"Aufräumen?!?")
             locFiles.all { deleteFile(it) }
         }
+
+        // Beta-Test: Funktioniert einigermaßen, aber seltsamer Ort.
+        @SuppressLint("SimpleDateFormat")
+        val ende =  SimpleDateFormat("yyyy-MM-dd").parse(this.getString(R.string.valid_until))
+        if (Date().after(ende))
+            Toast.makeText(this, getString(R.string.betaAlt), Toast.LENGTH_LONG).show()
 
         if (!assFiles.any { File(filesDir, it).exists() } ) {
             fSetting.updateLog("$TAG ${assFiles.size} Dateien aktualisiert.")
